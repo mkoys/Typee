@@ -1,0 +1,43 @@
+const viewElement = document.querySelector(".view");
+
+const map = [];
+const text = "This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys";
+const position = 0;
+
+const cursorElement = document.createElement("div");
+cursorElement.classList.add("cursor");
+viewElement.prepend(cursorElement);
+
+renderText(text, { words: true });
+
+function renderText(text, options = {}) {
+	map.length = 0;
+	let wordIndex = 0;
+	let wordElement = false;
+	for(const character of text) {
+		const characterElement = document.createElement("p");
+		characterElement.classList.add("character");
+		characterElement.textContent = character;
+		map.push(character);
+
+		if(options.words) {
+			if(!wordElement) {
+				wordElement = document.createElement("div");
+				wordElement.classList.add("word");
+				wordElement.setAttribute("index", wordIndex);
+				wordIndex++;
+			}
+
+			if(character === " ") {
+				wordElement.appendChild(characterElement);
+				viewElement.appendChild(wordElement);
+				wordElement = false;
+			}else {
+				wordElement.appendChild(characterElement);
+			}
+		}else {
+			viewElement.appendChild(characterElement);
+		}
+	}
+}
+
