@@ -41,7 +41,15 @@ html, body {
 .character {
 	height: 28px;
 	width: 13px;
-	color: white;
+	color: rgb(200, 200, 200);
 	font-size: 22px;
 	font-family: 'Source Code Pro', monospace;
+}
+
+.right {
+	color: white; 
+}
+
+.wrong {
+	color: #e72d2d;
 }

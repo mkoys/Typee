@@ -48,20 +48,45 @@ function renderText(text, options = {}) {
 }
 
 document.addEventListener("keydown", (event) => {
-	position++;
+	event.preventDefault();
+	const key = event.key;
+	const backspace = key === "Backspace" ? true : false;
+
+	if(key === "Shift" || key === "Tab" || key === "Alt" || key === "Control" || key === "Delete") { return }
+
+	if(!backspace) {
+		if(key === text[position]) {
+			map[position].classList.add("right");
+		}else {
+			map[position].classList.add("wrong");
+		}
+
+		map[position].textContent = key;
+	}
+
+	position += backspace ? -1 : 1;
 	
-	if(map.length == position) {
+	if(backspace) {
+		map[position].textContent = text[position];
+		map[position].classList.remove("right", "wrong");
+	}
+
+	if(map.length == position || position < 0) {
 		position = 0;
 	}
 
-	console.log(map[position]);
-	const offsetTop = map[position].offsetTop;
-	cursorPosition.x += 13;
+	const characterElement = map[position];
+	const offsetTop = characterElement.offsetTop;
+	const offsetLeft = characterElement.offsetLeft;
+	cursorPosition.x += backspace ? -13 : 13;
+
+	if(cursorPosition.x < 0) { cursorPosition.x = 0 }
+
 	cursorElement.style.left = `${cursorPosition.x}px`;
 
 	if (cursorPosition.y != offsetTop) {
 		cursorPosition.y = offsetTop;
-		cursorPosition.x = 0;
+		cursorPosition.x = backspace ? offsetLeft : 0;
 		cursorElement.style.top = `${cursorPosition.y}px`;
 		cursorElement.style.left = `${cursorPosition.x}px`;
 	}
