@@ -1,4 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+	--main-color: white;
+	--side-color: #e53c58;
+	--back-color: #f37f83;
+	--right-color: white;
+	--wrong-color: #fcd23f;
+	--font: 'Ubuntu Mono', monospace;
+}
 
 * {
 	margin: 0px;
@@ -8,7 +18,7 @@
 html, body {
 	width: 100%;
 	height: 100%;
-	background-color: #212121;
+	background-color: var(--back-color);
 }
 
 body {
@@ -33,9 +43,9 @@ body {
 
 .counter {
 	opacity: 0;
-	color: #d59d0e;
+	color: var(--main-color);
 	font-size: 26px;
-	font-family: 'Source Code Pro', monospace;
+	font-family: var(--font);
 	height: 28px;
 	transition: 400ms opacity ease;
 }
@@ -49,7 +59,7 @@ body {
 .view {
 	margin: 0px 40px 0px 40px;
 	position: relative;
-  scroll-behavior: smooth;
+	scroll-behavior: smooth;
 	display: flex;
 	flex-wrap: wrap;
 	width: 100%;
@@ -61,7 +71,7 @@ body {
 	position: absolute;
 	width: 3px;
 	height: 28px;
-	background-color: #d59d0e;
+	background-color: var(--main-color);
 	border-radius: 3px;
 	transition: 100ms left linear, 100ms top linear;
 }
@@ -73,15 +83,15 @@ body {
 .character {
 	height: 28px;
 	width: 13px;
-	color: rgb(200, 200, 200);
-	font-size: 22px;
-	font-family: 'Source Code Pro', monospace;
+	color: var(--side-color); 
+	font-size: 24px;
+	font-family: var(--font);
 }
 
 .right {
-	color: white; 
+	color: var(--right-color); 
 }
 
 .wrong {
-	color: #e72d2d;
+	color: var(--wrong-color);
 }
