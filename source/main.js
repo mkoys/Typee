@@ -1,7 +1,7 @@
 const viewElement = document.querySelector(".view");
 
 const map = [];
-const text = "This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys wtf";
+const text = "This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys ";
 let position = 0;
 
 const cursorPosition = { x: 0, y: 0 };
@@ -48,6 +48,24 @@ function renderText(text, options = {}) {
 	}
 }
 
+const resizeObserver = new ResizeObserver(entries => {
+	const offsetLeft = map[position].offsetLeft;
+	const offsetTop = map[position].offsetTop;
+
+	if (cursorPosition.y != offsetTop) {
+		if(offsetTop >= 56 || offsetTop < cursorPosition.y) {
+			viewElement.scrollTop += offsetTop < cursorPosition.y ? -28 : 28;
+		}
+	}
+
+	cursorPosition.x = offsetLeft;
+	cursorPosition.y = offsetTop;
+	cursorElement.style.top = `${cursorPosition.y}px`;
+	cursorElement.style.left = `${cursorPosition.x}px`;	
+});
+
+resizeObserver.observe(viewElement);
+
 document.addEventListener("keydown", (event) => {
 	event.preventDefault();
 	const key = event.key;
@@ -91,6 +109,10 @@ document.addEventListener("keydown", (event) => {
 	cursorElement.style.left = `${cursorPosition.x}px`;
 
 	if (cursorPosition.y != offsetTop) {
+		if(offsetTop >= 56 || offsetTop < cursorPosition.y) {
+			viewElement.scrollTop += backspace ? -28 : 28;
+		}
+
 		cursorPosition.y = offsetTop;
 		cursorPosition.x = backspace ? offsetLeft : 0;
 		cursorElement.style.top = `${cursorPosition.y}px`;
