@@ -20,6 +20,7 @@ html, body {
 }
 
 .view {
+	margin: 40px;
 	position: relative;
 	display: flex;
 	flex-wrap: wrap;

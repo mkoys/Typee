@@ -3,6 +3,7 @@ const viewElement = document.querySelector(".view");
 const map = [];
 const text = "This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys ";
 let position = 0;
+const ignoreKeys = ["Shift", "Tab", "Alt", "Control", "Delete", "Enter", "CapsLock", "End", "Home", "Insert", "PageUp", "PageDown"];
 
 const cursorPosition = { x: 0, y: 0 };
 const cursorElement = document.createElement("div");
@@ -48,20 +49,30 @@ function renderText(text, options = {}) {
 	}
 }
 
-const resizeObserver = new ResizeObserver(entries => {
-	const offsetLeft = map[position].offsetLeft;
+function checkScroll(resolve = () => {}) {
 	const offsetTop = map[position].offsetTop;
 
 	if (cursorPosition.y != offsetTop) {
 		if(offsetTop >= 56 || offsetTop < cursorPosition.y) {
-			viewElement.scrollTop += offsetTop < cursorPosition.y ? -28 : 28;
+			viewElement.scrollTop = offsetTop - 28;
 		}
-	}
 
-	cursorPosition.x = offsetLeft;
-	cursorPosition.y = offsetTop;
+		resolve();
+	}
+}
+
+function updateCursor(x, y) {
+	cursorPosition.x = x;
+	cursorPosition.y = y;
 	cursorElement.style.top = `${cursorPosition.y}px`;
 	cursorElement.style.left = `${cursorPosition.x}px`;	
+}
+
+const resizeObserver = new ResizeObserver(_ => {
+	const offsetLeft = map[position].offsetLeft;
+	const offsetTop = map[position].offsetTop;
+	checkScroll();
+	updateCursor(offsetLeft, offsetTop);
 });
 
 resizeObserver.observe(viewElement);
@@ -72,8 +83,10 @@ document.addEventListener("keydown", (event) => {
 	const backspace = key === "Backspace" ? true : false;
 
 	const previousCharacterElement = map[position];
+	
+	const ignoreKey = ignoreKeys.findIndex(item => item === key);
 
-	if(key === "Shift" || key === "Tab" || key === "Alt" || key === "Control" || key === "Delete" || key === "Enter") { return }
+	if(ignoreKey > -1) { return }
 
 	if(!backspace) {
 		if(key === text[position]) {
@@ -108,14 +121,7 @@ document.addEventListener("keydown", (event) => {
 
 	cursorElement.style.left = `${cursorPosition.x}px`;
 
-	if (cursorPosition.y != offsetTop) {
-		if(offsetTop >= 56 || offsetTop < cursorPosition.y) {
-			viewElement.scrollTop += backspace ? -28 : 28;
-		}
-
-		cursorPosition.y = offsetTop;
-		cursorPosition.x = backspace ? offsetLeft : 0;
-		cursorElement.style.top = `${cursorPosition.y}px`;
-		cursorElement.style.left = `${cursorPosition.x}px`;
-	}
+	checkScroll(() => {
+		updateCursor(backspace ? offsetLeft : 0, offsetTop)
+	});
 });
