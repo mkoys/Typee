@@ -106,12 +106,12 @@ document.addEventListener("keydown", (event) => {
 
 	position += backspace ? -1 : 1;
 
+	if(map.length == position || position < 0) { position = 0	}
+
 	if(map[position].parentNode.classList.contains("word")) {
 		couterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
 		couterElement.style.opacity = 1;
 	}
-
-	if(map.length == position || position < 0) { position = 0	}
 
 	if(backspace) {
 		map[position].textContent = text[position];
