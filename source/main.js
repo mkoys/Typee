@@ -1,4 +1,5 @@
 const viewElement = document.querySelector(".view");
+const couterElement = document.querySelector(".counter");
 
 const map = [];
 const text = "This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys ";
@@ -78,7 +79,7 @@ const resizeObserver = new ResizeObserver(_ => {
 resizeObserver.observe(viewElement);
 
 document.addEventListener("keydown", (event) => {
-	event.preventDefault();
+	//	event.preventDefault();
 	const key = event.key;
 	const backspace = key === "Backspace" ? true : false;
 
@@ -104,6 +105,11 @@ document.addEventListener("keydown", (event) => {
 	}
 
 	position += backspace ? -1 : 1;
+
+	if(map[position].parentNode.classList.contains("word")) {
+		couterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
+		couterElement.style.opacity = 1;
+	}
 
 	if(map.length == position || position < 0) { position = 0	}
 
