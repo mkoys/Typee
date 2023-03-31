@@ -16,10 +16,10 @@ function renderText(text, options = {}) {
 	let wordIndex = 0;
 	let wordElement = false;
 	for (const character of text) {
-		const characterElement = document.createElement("p");
-		characterElement.classList.add("character");
-		characterElement.textContent = character;
-		map.push(characterElement);
+		const currentCharacterElement = document.createElement("p");
+		currentCharacterElement.classList.add("character");
+		currentCharacterElement.textContent = character;
+		map.push(currentCharacterElement);
 
 		if (options.words) {
 			if (!wordElement) {
@@ -30,14 +30,14 @@ function renderText(text, options = {}) {
 			}
 
 			if (character === " ") {
-				wordElement.appendChild(characterElement);
+				wordElement.appendChild(currentCharacterElement);
 				viewElement.appendChild(wordElement);
 				wordElement = false;
 			} else {
-				wordElement.appendChild(characterElement);
+				wordElement.appendChild(currentCharacterElement);
 			}
 		} else {
-			viewElement.appendChild(characterElement);
+			viewElement.appendChild(currentCharacterElement);
 		}
 	}
 
@@ -52,32 +52,32 @@ document.addEventListener("keydown", (event) => {
 	const key = event.key;
 	const backspace = key === "Backspace" ? true : false;
 
+	const previousCharacterElement = map[position];
+
 	if(key === "Shift" || key === "Tab" || key === "Alt" || key === "Control" || key === "Delete") { return }
 
 	if(!backspace) {
 		if(key === text[position]) {
-			map[position].classList.add("right");
+			previousCharacterElement.classList.add("right");
 		}else {
-			map[position].classList.add("wrong");
+			previousCharacterElement.classList.add("wrong");
 		}
 
-		map[position].textContent = key;
+		previousCharacterElement.textContent = key;
 	}
 
 	position += backspace ? -1 : 1;
-	
+
+	if(map.length == position || position < 0) { position = 0	}
+
 	if(backspace) {
 		map[position].textContent = text[position];
 		map[position].classList.remove("right", "wrong");
 	}
 
-	if(map.length == position || position < 0) {
-		position = 0;
-	}
-
-	const characterElement = map[position];
-	const offsetTop = characterElement.offsetTop;
-	const offsetLeft = characterElement.offsetLeft;
+	const currentCharacterElement = map[position];
+	const offsetTop = currentCharacterElement.offsetTop;
+	const offsetLeft = currentCharacterElement.offsetLeft;
 	cursorPosition.x += backspace ? -13 : 13;
 
 	if(cursorPosition.x < 0) { cursorPosition.x = 0 }
