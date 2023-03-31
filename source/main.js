@@ -7,6 +7,7 @@ let position = 0;
 const cursorPosition = { x: 0, y: 0 };
 const cursorElement = document.createElement("div");
 cursorElement.classList.add("cursor");
+cursorElement.style.left = 0;
 viewElement.prepend(cursorElement);
 
 renderText(text, { words: true });
@@ -54,7 +55,7 @@ document.addEventListener("keydown", (event) => {
 
 	const previousCharacterElement = map[position];
 
-	if(key === "Shift" || key === "Tab" || key === "Alt" || key === "Control" || key === "Delete") { return }
+	if(key === "Shift" || key === "Tab" || key === "Alt" || key === "Control" || key === "Delete" || key === "Enter") { return }
 
 	if(!backspace) {
 		if(key === text[position]) {
@@ -62,8 +63,13 @@ document.addEventListener("keydown", (event) => {
 		}else {
 			previousCharacterElement.classList.add("wrong");
 		}
-
-		previousCharacterElement.textContent = key;
+		
+		if(key === " ") {
+			const wrong = previousCharacterElement.classList.contains("wrong");
+			previousCharacterElement.textContent = wrong ? "_" : key;
+		}else {
+			previousCharacterElement.textContent = key;
+		}
 	}
 
 	position += backspace ? -1 : 1;

@@ -32,6 +32,7 @@ html, body {
 	height: 28px;
 	background-color: #d59d0e;
 	border-radius: 3px;
+	transition: 100ms left linear, 100ms top linear;
 }
 
 .word {
