@@ -6,15 +6,20 @@ const languageTextElement = document.querySelector(".languageText");
 const languageElement = document.querySelector(".language");
 const iconElement = document.querySelector(".icon");
 const headingElement = document.querySelector(".heading");
+const popupElement = document.querySelector(".popup");
+const popupBoxElement = document.querySelector(".popupBox");
 
 const map = [];
 const language = "english";
 const wordNumber = 30;
+let menu = false;
 let text = "";
 let position = 0;
 let seed = 0;
-const ignoreKeys = ["Shift", "Tab", "Alt", "Control", "Delete", "Enter", "CapsLock", "End", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", ];
+const ignoreKeys = ["Shift", "Tab", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", ];
 
+popupBoxElement.style.visibility = "hidden";
+popupBoxElement.style.opacity = 0;
 languageTextElement.textContent = language;
 
 function randomNumberInRange(seed, min, max) {
@@ -110,6 +115,18 @@ document.addEventListener("keydown", (event) => {
 	//	event.preventDefault();
 	const key = event.key;
 	const backspace = key === "Backspace" ? true : false;
+
+	if(key === "Escape") {
+		menu = !menu;
+		if(menu) {
+			popupBoxElement.style.visibility = "visible";
+			popupBoxElement.style.opacity = 1;
+		}else {
+			popupBoxElement.style.visibility = "hidden";
+			popupBoxElement.style.opacity = 0;
+		}
+    return;
+	}
 
 	const previousCharacterElement = map[position];
 	
