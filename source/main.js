@@ -1,16 +1,26 @@
+import words from "./words.js";
+
 const viewElement = document.querySelector(".view");
 const couterElement = document.querySelector(".counter");
 
 const map = [];
-const text = "This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys This is some text. This is also some text but it is a bit longer than it the first one! So this right here is a small typing test build by Mkoys ";
+const language = "english";
+const wordNumber = 30;
+let text = "";
 let position = 0;
-const ignoreKeys = ["Shift", "Tab", "Alt", "Control", "Delete", "Enter", "CapsLock", "End", "Home", "Insert", "PageUp", "PageDown"];
+const ignoreKeys = ["Shift", "Tab", "Alt", "Control", "Delete", "Enter", "CapsLock", "End", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", ];
+
+for(let index = 0; index < wordNumber; index++) {
+	const randomIndex = Math.floor(Math.random() * words[language].length) - 1;
+	if(index != wordNumber - 1) { text += words[language][randomIndex] + " " }
+}
 
 const cursorPosition = { x: 0, y: 0 };
 const cursorElement = document.createElement("div");
 cursorElement.classList.add("cursor");
 cursorElement.style.left = 0;
 viewElement.prepend(cursorElement);
+const textWidth = 14;
 
 renderText(text, { words: true });
 
@@ -121,7 +131,7 @@ document.addEventListener("keydown", (event) => {
 	const currentCharacterElement = map[position];
 	const offsetTop = currentCharacterElement.offsetTop;
 	const offsetLeft = currentCharacterElement.offsetLeft;
-	cursorPosition.x += backspace ? -13 : 13;
+	cursorPosition.x += backspace ? -textWidth : textWidth;
 
 	if(cursorPosition.x < 0) { cursorPosition.x = 0 }
 

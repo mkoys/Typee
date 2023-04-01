@@ -112,9 +112,9 @@ header {
 
 .character {
 	height: 28px;
-	width: 13px;
+	width: 14px;
 	color: var(--side-color); 
-	font-size: 24px;
+	font-size: 28px;
 	font-family: var(--font);
 }
 
