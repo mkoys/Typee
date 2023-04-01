@@ -2,16 +2,32 @@ import words from "./words.js";
 
 const viewElement = document.querySelector(".view");
 const couterElement = document.querySelector(".counter");
+const languageTextElement = document.querySelector(".languageText");
+const languageElement = document.querySelector(".language");
 
 const map = [];
 const language = "english";
 const wordNumber = 30;
 let text = "";
 let position = 0;
+let seed = 666;
 const ignoreKeys = ["Shift", "Tab", "Alt", "Control", "Delete", "Enter", "CapsLock", "End", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", ];
 
+languageTextElement.textContent = language;
+
+function randomNumberInRange(seed, min, max) {
+  const x = Math.sin(seed) * 10000;
+  const randomNumber = x - Math.floor(x);
+  return Math.floor(randomNumber * (max - min + 1) + min);
+}
+
 for(let index = 0; index < wordNumber; index++) {
-	const randomIndex = Math.floor(Math.random() * words[language].length) - 1;
+	let randomIndex;
+	if(seed) {
+		randomIndex = randomNumberInRange(seed * index, 0, words[language].length);
+	}else {
+		randomIndex = Math.floor(Math.random() * words[language].length) -1;
+	}
 	if(index != wordNumber - 1) { text += words[language][randomIndex] + " " }
 }
 
@@ -119,6 +135,8 @@ document.addEventListener("keydown", (event) => {
 	if(map.length == position || position < 0) { position = 0	}
 
 	if(map[position].parentNode.classList.contains("word")) {
+    languageElement.style.opacity = 0;
+    languageElement.style.visibility = "hidden";
 		couterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
 		couterElement.style.opacity = 1;
 	}

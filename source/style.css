@@ -46,12 +46,12 @@ header {
 .icon {
 	margin: 0px 10px 0px 10px;
 	color: var(--main-color);	
-	font-size: 42px;
+	font-size: 32px;
 }
 
 .heading {
 	color: var(--main-color); 
-	font-size: 42px;
+	font-size: 32px;
 	font-weight: bold;
 	font-family: var(--font);
 }
@@ -68,10 +68,31 @@ header {
 .info {
 	width: 90%;
 	display: flex;
+	justify-content: space-between;
 	margin: 0px 40px 10px 40px;
 }
 
+.language {
+	justify-self: left;
+	display: flex;
+	align-items: center;
+	transition: 400ms opacity ease, 400ms visibility ease;
+}
+
+.languageIcon {
+	font-size: 22px;
+	color: var(--side-color);
+}
+
+.languageText {
+	margin-left: 5px;
+	color: var(--side-color);
+	font-size: 22px;
+	font-family: var(--font);
+}
+
 .counter {
+	position: absolute;
 	opacity: 0;
 	color: var(--main-color);
 	font-size: 26px;
@@ -126,7 +147,7 @@ header {
 	color: var(--wrong-color);
 }
 
-@media only screen and (max-height: 325px) {
+@media only screen and (max-height: 315px) {
 	header {
 		visibility: hidden;
 		opacity: 0;
