@@ -2,11 +2,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 :root {
-	--main-color: white;
-	--side-color: #e53c58;
-	--back-color: #f37f83;
+	--main-color: #f44c7f;
+	--side-color: white;
+	--none-color: #939eae;
+	--back-color: #333a45;
 	--right-color: white;
-	--wrong-color: #fcd23f;
+	--wrong-color: #da3333;
 	--font: 'Ubuntu Mono', monospace;
 }
 
@@ -47,13 +48,15 @@ header {
 	margin: 0px 10px 0px 10px;
 	color: var(--main-color);	
 	font-size: 32px;
+	transition: 400ms color ease;
 }
 
 .heading {
-	color: var(--main-color); 
+	color: var(--side-color); 
 	font-size: 32px;
 	font-weight: bold;
 	font-family: var(--font);
+	transition: 400ms color ease;
 }
 
 .box {
@@ -81,12 +84,12 @@ header {
 
 .languageIcon {
 	font-size: 22px;
-	color: var(--side-color);
+	color: var(--none-color);
 }
 
 .languageText {
 	margin-left: 5px;
-	color: var(--side-color);
+	color: var(--none-color);
 	font-size: 22px;
 	font-family: var(--font);
 }
@@ -134,7 +137,7 @@ header {
 .character {
 	height: 28px;
 	width: 14px;
-	color: var(--side-color); 
+	color: var(--none-color); 
 	font-size: 28px;
 	font-family: var(--font);
 }

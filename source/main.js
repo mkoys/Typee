@@ -4,13 +4,15 @@ const viewElement = document.querySelector(".view");
 const couterElement = document.querySelector(".counter");
 const languageTextElement = document.querySelector(".languageText");
 const languageElement = document.querySelector(".language");
+const iconElement = document.querySelector(".icon");
+const headingElement = document.querySelector(".heading");
 
 const map = [];
 const language = "english";
 const wordNumber = 30;
 let text = "";
 let position = 0;
-let seed = 666;
+let seed = 0;
 const ignoreKeys = ["Shift", "Tab", "Alt", "Control", "Delete", "Enter", "CapsLock", "End", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", ];
 
 languageTextElement.textContent = language;
@@ -139,6 +141,8 @@ document.addEventListener("keydown", (event) => {
     languageElement.style.visibility = "hidden";
 		couterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
 		couterElement.style.opacity = 1;
+    iconElement.style.color = "var(--none-color)";
+    headingElement.style.color = "var(--none-color)";
 	}
 
 	if(backspace) {
