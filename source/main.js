@@ -109,25 +109,30 @@ const resizeObserver = new ResizeObserver(_ => {
 	updateCursor(offsetLeft, offsetTop);
 });
 
+function setMenu(value) {
+	menu = value;
+
+	if(menu) {
+		popupBoxElement.style.visibility = "visible";
+		popupBoxElement.style.opacity = 1;
+	}else {
+		popupBoxElement.style.visibility = "hidden";
+		popupBoxElement.style.opacity = 0;
+	}
+}
+
 resizeObserver.observe(viewElement);
+
+popupBoxElement.addEventListener("click", () => setMenu(false));
+popupElement.addEventListener("click", (event) => event.stopPropagation());
+languageElement.addEventListener("click", () => setMenu(true));
 
 document.addEventListener("keydown", (event) => {
 	//	event.preventDefault();
 	const key = event.key;
 	const backspace = key === "Backspace" ? true : false;
 
-	if(key === "Escape") {
-		menu = !menu;
-		if(menu) {
-			popupBoxElement.style.visibility = "visible";
-			popupBoxElement.style.opacity = 1;
-		}else {
-			popupBoxElement.style.visibility = "hidden";
-			popupBoxElement.style.opacity = 0;
-		}
-    return;
-	}
-
+	if(key === "Escape") return setMenu(!menu);
 	if(menu) return;
 
 	const previousCharacterElement = map[position];
