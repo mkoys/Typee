@@ -225,6 +225,11 @@ header {
 	background-color: var(--main-color);
 	border-radius: 3px;
 	transition: 100ms left linear, 100ms top linear;
+	animation-name: blink;
+	animation-duration: 800ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: ease;
+	animation-fill-mode: forwards;
 }
 
 .word {
@@ -253,3 +258,10 @@ header {
 		opacity: 0;
 	}
 }
+
+@keyframes blink {
+  0% { opacity: 1 }
+  50% { opacity: 0 }
+	100% { opacity: 1 }
+}
+

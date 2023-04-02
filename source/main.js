@@ -170,6 +170,7 @@ function reset() {
 	counterElement.style.opacity = 0;
 	languageElement.style.opacity = 1;
 	languageElement.style.visibility = "visible";
+	cursorElement.style.animationIterationCount = "infinite";
 
 	updateCursor(0, 0);
 	focusLogo(true);
@@ -230,6 +231,7 @@ document.addEventListener("keydown", (event) => {
     languageElement.style.visibility = "hidden";
 		counterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
 		counterElement.style.opacity = 1;
+		cursorElement.style.animationIterationCount = 1;
 		focusLogo(false);
 	}
 
