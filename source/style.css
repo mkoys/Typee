@@ -37,11 +37,10 @@ body {
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.6);
 	z-index: 1000;
-	transition: 400ms visibility ease, 400ms opacity ease;
+	transition: 200ms visibility ease, 200ms opacity ease;
 }
 
 .popup {
-	height: 200px;
 	max-width: 600px;
 	width: 600px;
 	margin: 15px;
@@ -49,6 +48,35 @@ body {
 	border-radius: 6px;
 }
 
+.languageMenu {
+	
+}
+
+.search {
+	display: flex;
+	align-items: center;
+	padding: 16px;
+}
+
+.searchIcon {
+	font-size: 22px;
+	font-weight: bold;
+	color: var(--none-color);
+}
+
+.searchInput {
+	margin-left: 16px;
+	background-color: transparent;
+	outline: none;
+	border: none;
+	color: var(--right-color);
+	font-family: var(--font);
+	font-size: 20px;
+}
+
+.searchInput::placeholder {
+	color: var(--none-color);
+}
 
 header {
 	position: fixed;
@@ -105,9 +133,22 @@ header {
 	transition: 400ms opacity ease, 400ms visibility ease;
 }
 
+.language:hover {
+	cursor: pointer;
+}
+
+.language:hover .languageIcon {
+	color: var(--right-color);
+}
+
+.language:hover .languageText {
+	color: var(--right-color);
+}
+
 .languageIcon {
 	font-size: 22px;
 	color: var(--none-color);
+	transition: 200ms color ease;
 }
 
 .languageText {
@@ -115,6 +156,7 @@ header {
 	color: var(--none-color);
 	font-size: 22px;
 	font-family: var(--font);
+	transition: 200ms color ease;
 }
 
 .counter {
