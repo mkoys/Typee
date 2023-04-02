@@ -164,6 +164,19 @@ function focusLogo(value) {
 	}
 }
 
+function reset() {
+	position = 0;
+	counterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
+	counterElement.style.opacity = 0;
+	languageElement.style.opacity = 1;
+	languageElement.style.visibility = "visible";
+
+	updateCursor(0, 0);
+	focusLogo(true);
+	checkScroll(() => {}, true);
+	renderText(generateText(), {words: true});	
+}
+
 resizeObserver.observe(viewElement);
 
 popupBoxElement.addEventListener("click", () => setMenu(false));
@@ -176,18 +189,7 @@ document.addEventListener("keydown", (event) => {
 
 	if(key === "Tab") {
 		event.preventDefault();
-
-		position = 0;
-		counterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
-		counterElement.style.opacity = 0;
-		languageElement.style.opacity = 1;
-    languageElement.style.visibility = "visible";
-
-		updateCursor(0, 0);
-		focusLogo(true);
-		checkScroll(() => {}, true);
-		renderText(generateText(), {words: true});	
-		return;
+		return reset();
 	}
 
 	if(key === "Escape") return setMenu(!menu);
@@ -216,7 +218,12 @@ document.addEventListener("keydown", (event) => {
 
 	position += backspace ? -1 : 1;
 
-	if(map.length == position || position < 0) { position = 0	}
+	if(position == map.length) {
+		reset();
+		return;
+	}
+
+	if(position < 0) { position = 0	}
 
 	if(map[position].parentNode.classList.contains("word")) {
     languageElement.style.opacity = 0;
