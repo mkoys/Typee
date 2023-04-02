@@ -8,9 +8,11 @@ const iconElement = document.querySelector(".icon");
 const headingElement = document.querySelector(".heading");
 const popupElement = document.querySelector(".popup");
 const popupBoxElement = document.querySelector(".popupBox");
+const languageMenuElement = document.querySelector(".languageMenu");
 
 const map = [];
 const language = "english";
+const languages = Object.keys(words);
 const wordNumber = 30;
 let menu = false;
 let text = "";
@@ -26,6 +28,26 @@ function randomNumberInRange(seed, min, max) {
   const x = Math.sin(seed) * 10000;
   const randomNumber = x - Math.floor(x);
   return Math.floor(randomNumber * (max - min + 1) + min);
+}
+
+for(let index = 0; index < languages.length; index++) {
+	const languageOptionTextElement = document.createElement("p");
+	const languageOptionIconElement = document.createElement("span");
+	const languageOptionElement = document.createElement("div");
+	languageOptionIconElement.classList.add("languageOptionIcon", "material-symbols-outlined");
+	languageOptionTextElement.classList.add("languageOptionText");
+	languageOptionElement.classList.add("languageOption");
+
+	languageOptionIconElement.textContent = "done";
+	languageOptionTextElement.textContent = languages[index];
+
+	if(languages[index] === language) {
+		languageOptionIconElement.style.visibility = "visible";
+	}
+
+	languageOptionElement.appendChild(languageOptionIconElement);
+	languageOptionElement.appendChild(languageOptionTextElement);
+	languageMenuElement.appendChild(languageOptionElement);
 }
 
 for(let index = 0; index < wordNumber; index++) {
