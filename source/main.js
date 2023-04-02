@@ -1,7 +1,7 @@
 import words from "./words.js";
 
 const viewElement = document.querySelector(".view");
-const couterElement = document.querySelector(".counter");
+const counterElement = document.querySelector(".counter");
 const languageTextElement = document.querySelector(".languageText");
 const languageElement = document.querySelector(".language");
 const iconElement = document.querySelector(".icon");
@@ -17,8 +17,8 @@ const wordNumber = 30;
 let menu = false;
 let text = "";
 let position = 0;
-let seed = 666;
-const ignoreKeys = ["Shift", "Tab", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "Meta", "Dead" ];
+let seed = 0;
+const ignoreKeys = ["Shift", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "Meta", "Dead" ];
 
 popupBoxElement.style.visibility = "hidden";
 popupBoxElement.style.opacity = 0;
@@ -50,26 +50,32 @@ for(let index = 0; index < languages.length; index++) {
 	languageMenuElement.appendChild(languageOptionElement);
 }
 
-for(let index = 0; index < wordNumber; index++) {
-	let randomIndex;
-	if(seed) {
-		randomIndex = randomNumberInRange(seed * index, 0, words[language].length);
-	}else {
-		randomIndex = Math.floor(Math.random() * words[language].length) -1;
+function generateText() {
+	text = "";
+	for(let index = 0; index < wordNumber; index++) {
+		let randomIndex;
+		if(seed) {
+			randomIndex = randomNumberInRange(seed * index, 0, words[language].length);
+		}else {
+			randomIndex = Math.floor(Math.random() * words[language].length) -1;
+		}
+		if(index != wordNumber - 1) { text += words[language][randomIndex] + " " }
 	}
-	if(index != wordNumber - 1) { text += words[language][randomIndex] + " " }
+
+	return text;
 }
 
 const cursorPosition = { x: 0, y: 0 };
 const cursorElement = document.createElement("div");
 cursorElement.classList.add("cursor");
 cursorElement.style.left = 0;
-viewElement.prepend(cursorElement);
 const textWidth = 14;
 
-renderText(text, { words: true });
+renderText(generateText(), { words: true });
 
 function renderText(text, options = {}) {
+	viewElement.innerHTML = "";
+	viewElement.appendChild(cursorElement);
 	map.length = 0;
 	let wordIndex = 0;
 	let wordElement = false;
@@ -105,8 +111,13 @@ function renderText(text, options = {}) {
 	}
 }
 
-function checkScroll(resolve = () => {}) {
+function checkScroll(resolve = () => {}, reset = false) {
 	const offsetTop = map[position].offsetTop;
+
+	if(reset) {
+		viewElement.scrollTop = 0;
+		return;
+	}
 
 	if (cursorPosition.y != offsetTop) {
 		if(offsetTop >= 56 || offsetTop < cursorPosition.y) {
@@ -143,6 +154,16 @@ function setMenu(value) {
 	}
 }
 
+function focusLogo(value) {
+	if(value) {
+		iconElement.style.color = "var(--main-color)"; 
+		headingElement.style.color = "var(--right-color)";
+	}else {
+		iconElement.style.color = "var(--none-color)";
+		headingElement.style.color = "var(--none-color)";
+	}
+}
+
 resizeObserver.observe(viewElement);
 
 popupBoxElement.addEventListener("click", () => setMenu(false));
@@ -150,9 +171,24 @@ popupElement.addEventListener("click", (event) => event.stopPropagation());
 languageElement.addEventListener("click", () => setMenu(true));
 
 document.addEventListener("keydown", (event) => {
-	//	event.preventDefault();
 	const key = event.key;
 	const backspace = key === "Backspace" ? true : false;
+
+	if(key === "Tab") {
+		event.preventDefault();
+
+		position = 0;
+		counterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
+		counterElement.style.opacity = 0;
+		languageElement.style.opacity = 1;
+    languageElement.style.visibility = "visible";
+
+		updateCursor(0, 0);
+		focusLogo(true);
+		checkScroll(() => {}, true);
+		renderText(generateText(), {words: true});	
+		return;
+	}
 
 	if(key === "Escape") return setMenu(!menu);
 	if(menu) return;
@@ -185,10 +221,9 @@ document.addEventListener("keydown", (event) => {
 	if(map[position].parentNode.classList.contains("word")) {
     languageElement.style.opacity = 0;
     languageElement.style.visibility = "hidden";
-		couterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
-		couterElement.style.opacity = 1;
-    iconElement.style.color = "var(--none-color)";
-    headingElement.style.color = "var(--none-color)";
+		counterElement.textContent = `${parseInt(map[position].parentNode.getAttribute("index")) + 1}/${viewElement.children.length}`;
+		counterElement.style.opacity = 1;
+		focusLogo(false);
 	}
 
 	if(backspace) {
