@@ -13,7 +13,7 @@ const menuElement = document.querySelector(".menu");
 
 const map = [];
 const languages = Object.keys(words);
-const wordNumber = 30;
+const wordNumber = 10;
 const prefrenceOptions = [{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions)}]; 
 const ignoreKeys = ["Shift", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "Meta", "Dead" ];
 
@@ -28,6 +28,27 @@ let seed = 0;
 popupBoxElement.style.visibility = "hidden";
 popupBoxElement.style.opacity = 0;
 languageTextElement.textContent = language;
+
+const cursorPosition = { x: 0, y: 0 };
+const cursorElement = document.createElement("div");
+cursorElement.classList.add("cursor");
+cursorElement.style.left = 0;
+const textWidth = 14;
+
+renderText(generateText(), { words: true });
+
+const resizeObserver = new ResizeObserver(_ => {
+	const offsetLeft = map[position].offsetLeft;
+	const offsetTop = map[position].offsetTop;
+	checkScroll();
+	updateCursor(offsetLeft, offsetTop);
+});
+
+resizeObserver.observe(viewElement);
+
+popupBoxElement.addEventListener("click", () => setMenu(false));
+popupElement.addEventListener("click", (event) => event.stopPropagation());
+languageElement.addEventListener("click", () => setMenu(true, languageOptions));
 
 for(let index = 0; index < languages.length; index++) {
 	languageOptions[index] = {};
@@ -122,14 +143,6 @@ function generateText() {
 	return text;
 }
 
-const cursorPosition = { x: 0, y: 0 };
-const cursorElement = document.createElement("div");
-cursorElement.classList.add("cursor");
-cursorElement.style.left = 0;
-const textWidth = 14;
-
-renderText(generateText(), { words: true });
-
 function renderText(text, options = {}) {
 	viewElement.innerHTML = "";
 	viewElement.appendChild(cursorElement);
@@ -192,12 +205,7 @@ function updateCursor(x, y) {
 	cursorElement.style.left = `${cursorPosition.x}px`;	
 }
 
-const resizeObserver = new ResizeObserver(_ => {
-	const offsetLeft = map[position].offsetLeft;
-	const offsetTop = map[position].offsetTop;
-	checkScroll();
-	updateCursor(offsetLeft, offsetTop);
-});
+
 
 function focusLogo(value) {
 	if(value) {
@@ -222,12 +230,6 @@ function reset() {
 	checkScroll(() => {}, true);
 	renderText(generateText(), {words: true});	
 }
-
-resizeObserver.observe(viewElement);
-
-popupBoxElement.addEventListener("click", () => setMenu(false));
-popupElement.addEventListener("click", (event) => event.stopPropagation());
-languageElement.addEventListener("click", () => setMenu(true, languageOptions));
 
 document.addEventListener("keydown", (event) => {
 	const key = event.key;
