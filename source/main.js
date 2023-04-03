@@ -56,16 +56,20 @@ for(let index = 0; index < languages.length; index++) {
 
 		for(let index = 0; index < languages.length; index++) {
 			if(languages[index] === language) {
-				languageOptions[index].querySelector(".languageOptionIcon").style.visibility = "hidden";
+				remove = languageOptions[index];
+			}
+
+			if(languages[index] === languageOptionTextElement.textContent) { 
+				add = languageOptions[index] 
 			}
 		}
 
-		for(let index = 0; index < languages.length; index++) {
-			if(languages[index] === languageOptionTextElement.textContent) {
-				languageOptions[index].querySelector(".languageOptionIcon").style.visibility = "visible";
-				language = languageOptionTextElement.textContent;
-				languageTextElement.textContent = language;
-			}
+		remove.querySelector(".languageOptionIcon").style.visibility = "hidden";
+
+		if(add) {
+			add.querySelector(".languageOptionIcon").style.visibility = "visible";
+			language = languageOptionTextElement.textContent;
+			languageTextElement.textContent = language;
 		}
 
 		setMenu(false);
