@@ -199,6 +199,8 @@ function setMenu(value, item = false) {
 		popupBoxElement.style.visibility = "hidden";
 		popupBoxElement.style.opacity = 0;
 	}
+
+	setTimeout(() => searchInputElement.focus(), 100)
 }
 
 function focusLogo(value) {
