@@ -13,15 +13,17 @@ const searchInputElement = document.querySelector(".searchInput");
 const prefrenceMenuElement = document.querySelector(".prefrenceMenu");
 
 const map = [];
-const language = "english";
 const languages = Object.keys(words);
+const languageOptions = [];
 const wordNumber = 30;
+const ignoreKeys = ["Shift", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "Meta", "Dead" ];
+
+let language = "english";
 let menu = false;
 let menuWindow = false;
 let text = "";
 let position = 0;
 let seed = 0;
-const ignoreKeys = ["Shift", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "Meta", "Dead" ];
 
 popupBoxElement.style.visibility = "hidden";
 popupBoxElement.style.opacity = 0;
@@ -48,9 +50,33 @@ for(let index = 0; index < languages.length; index++) {
 		languageOptionIconElement.style.visibility = "visible";
 	}
 
+	languageOptionElement.addEventListener("click", () => {
+		let remove;
+		let add;
+
+		for(let index = 0; index < languages.length; index++) {
+			if(languages[index] === language) {
+				languageOptions[index].querySelector(".languageOptionIcon").style.visibility = "hidden";
+			}
+		}
+
+		for(let index = 0; index < languages.length; index++) {
+			if(languages[index] === languageOptionTextElement.textContent) {
+				languageOptions[index].querySelector(".languageOptionIcon").style.visibility = "visible";
+				language = languageOptionTextElement.textContent;
+				languageTextElement.textContent = language;
+			}
+		}
+
+		setMenu(false);
+		reset();
+	});
+
 	languageOptionElement.appendChild(languageOptionIconElement);
 	languageOptionElement.appendChild(languageOptionTextElement);
 	languageMenuElement.appendChild(languageOptionElement);
+
+	languageOptions.push(languageOptionElement);
 }
 
 function generateText() {
