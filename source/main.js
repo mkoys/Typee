@@ -29,12 +29,6 @@ popupBoxElement.style.visibility = "hidden";
 popupBoxElement.style.opacity = 0;
 languageTextElement.textContent = language;
 
-function randomNumberInRange(seed, min, max) {
-  const x = Math.sin(seed) * 10000;
-  const randomNumber = x - Math.floor(x);
-  return Math.floor(randomNumber * (max - min + 1) + min);
-}
-
 for(let index = 0; index < languages.length; index++) {
 	languageOptions[index] = {};
 	languageOptions[index].icon = "done";
@@ -43,6 +37,12 @@ for(let index = 0; index < languages.length; index++) {
 	languageOptions[index].action = () => {
 		selectLanguage(languageOptions[index]);
 	};
+}
+
+function randomNumberInRange(seed, min, max) {
+  const x = Math.sin(seed) * 10000;
+  const randomNumber = x - Math.floor(x);
+  return Math.floor(randomNumber * (max - min + 1) + min);
 }
 
 function setMenu(value, options) {
