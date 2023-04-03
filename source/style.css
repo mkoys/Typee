@@ -60,11 +60,23 @@ body {
 	align-items: center;
 }
 
+.languageOption:focus {
+	outline: none;
+}
+
 .languageOption:hover .languageOptionIcon {
 	color: var(--right-color);
 }
 
 .languageOption:hover .languageOptionText {
+	color: var(--right-color);
+}
+
+.languageOption:focus .languageOptionIcon {
+	color: var(--right-color);
+}
+
+.languageOption:focus .languageOptionText {
 	color: var(--right-color);
 }
 
@@ -121,6 +133,17 @@ body {
 	cursor: pointer;
 	display: flex;
 	align-items: center;
+}
+
+.prefrenceOption:focus {
+	outline: none;
+}
+
+.prefrenceOption:focus .prefrenceOptionText {
+	color: var(--right-color);
+}
+.prefrenceOption:focus .prefrenceOptionIcon {
+	color: var(--right-color);
 }
 
 .prefrenceOption:hover .prefrenceOptionIcon {

@@ -43,7 +43,8 @@ for(let index = 0; index < languages.length; index++) {
 	languageOptionIconElement.classList.add("languageOptionIcon", "material-symbols-outlined");
 	languageOptionTextElement.classList.add("languageOptionText");
 	languageOptionElement.classList.add("languageOption");
-
+	
+	languageOptionElement.setAttribute("tabindex", 0);
 	languageOptionIconElement.textContent = "done";
 	languageOptionTextElement.textContent = languages[index];
 
@@ -51,31 +52,8 @@ for(let index = 0; index < languages.length; index++) {
 		languageOptionIconElement.style.visibility = "visible";
 	}
 
-	languageOptionElement.addEventListener("click", () => {
-		let remove;
-		let add;
-
-		for(let index = 0; index < languages.length; index++) {
-			if(languages[index] === language) {
-				remove = languageOptions[index];
-			}
-
-			if(languages[index] === languageOptionTextElement.textContent) { 
-				add = languageOptions[index] 
-			}
-		}
-
-		remove.querySelector(".languageOptionIcon").style.visibility = "hidden";
-
-		if(add) {
-			add.querySelector(".languageOptionIcon").style.visibility = "visible";
-			language = languageOptionTextElement.textContent;
-			languageTextElement.textContent = language;
-		}
-
-		setMenu(false);
-		reset();
-	});
+	languageOptionElement.addEventListener("click", () => openLanguageMenu(languageOptionTextElement));
+	languageOptionElement.addEventListener("keydown", (event) => { if(event.key === "Enter") openLanguageMenu(languageOptionTextElement) });
 
 	languageOptionElement.appendChild(languageOptionIconElement);
 	languageOptionElement.appendChild(languageOptionTextElement);
@@ -85,6 +63,33 @@ for(let index = 0; index < languages.length; index++) {
 }
 
 prefrenceLanguageElement.addEventListener("click", () => setMenu(true, "language"));
+prefrenceLanguageElement.addEventListener("keydown", (event) => { if(event.key === "Enter") setMenu(true, "language") });
+
+function openLanguageMenu(target) {
+	let remove;
+	let add;
+
+	for(let index = 0; index < languages.length; index++) {
+		if(languages[index] === language) {
+			remove = languageOptions[index];
+		}
+
+		if(languages[index] === target.textContent) { 
+			add = languageOptions[index] 
+		}
+	}
+
+	remove.querySelector(".languageOptionIcon").style.visibility = "hidden";
+
+	if(add) {
+		add.querySelector(".languageOptionIcon").style.visibility = "visible";
+		language = target.textContent;
+		languageTextElement.textContent = language;
+	}
+
+	setMenu(false);
+	reset();
+}
 
 function generateText() {
 	text = "";
@@ -244,7 +249,7 @@ document.addEventListener("keydown", (event) => {
 	const key = event.key;
 	const backspace = key === "Backspace" ? true : false;
 
-	if(key === "Tab") {
+	if(key === "Tab" && !menu) {
 		event.preventDefault();
 		return reset();
 	}
