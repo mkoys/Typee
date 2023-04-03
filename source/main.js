@@ -11,6 +11,7 @@ const popupBoxElement = document.querySelector(".popupBox");
 const languageMenuElement = document.querySelector(".languageMenu");
 const searchInputElement = document.querySelector(".searchInput");
 const prefrenceMenuElement = document.querySelector(".prefrenceMenu");
+const prefrenceLanguageElement = document.querySelector(".prefrenceLanguage");
 
 const map = [];
 const languages = Object.keys(words);
@@ -82,6 +83,8 @@ for(let index = 0; index < languages.length; index++) {
 
 	languageOptions.push(languageOptionElement);
 }
+
+prefrenceLanguageElement.addEventListener("click", () => setMenu(true, "language"));
 
 function generateText() {
 	text = "";
