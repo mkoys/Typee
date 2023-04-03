@@ -9,12 +9,15 @@ const headingElement = document.querySelector(".heading");
 const popupElement = document.querySelector(".popup");
 const popupBoxElement = document.querySelector(".popupBox");
 const languageMenuElement = document.querySelector(".languageMenu");
+const searchInputElement = document.querySelector(".searchInput");
+const prefrenceMenuElement = document.querySelector(".prefrenceMenu");
 
 const map = [];
 const language = "english";
 const languages = Object.keys(words);
 const wordNumber = 30;
 let menu = false;
+let menuWindow = false;
 let text = "";
 let position = 0;
 let seed = 0;
@@ -142,10 +145,28 @@ const resizeObserver = new ResizeObserver(_ => {
 	updateCursor(offsetLeft, offsetTop);
 });
 
-function setMenu(value) {
+function setMenu(value, item = false) {
 	menu = value;
 
+	if(menuWindow && menu) {
+		searchInputElement.value = "";
+		menuWindow.style.display = "none";
+	}
+	
 	if(menu) {
+		switch(item) {
+			case "language": 
+				menuWindow = languageMenuElement;
+				menuWindow.style.display = "flex";
+				break;
+			case "prefrence":
+				menuWindow = prefrenceMenuElement;
+				menuWindow.style.display = "flex";
+				break;
+			default:
+				break;
+		}
+
 		popupBoxElement.style.visibility = "visible";
 		popupBoxElement.style.opacity = 1;
 	}else {
@@ -182,7 +203,7 @@ resizeObserver.observe(viewElement);
 
 popupBoxElement.addEventListener("click", () => setMenu(false));
 popupElement.addEventListener("click", (event) => event.stopPropagation());
-languageElement.addEventListener("click", () => setMenu(true));
+languageElement.addEventListener("click", () => setMenu(true, "language"));
 
 document.addEventListener("keydown", (event) => {
 	const key = event.key;
@@ -193,7 +214,7 @@ document.addEventListener("keydown", (event) => {
 		return reset();
 	}
 
-	if(key === "Escape") return setMenu(!menu);
+	if(key === "Escape") return setMenu(!menu, "prefrence");
 	if(menu) return;
 
 	const previousCharacterElement = map[position];
