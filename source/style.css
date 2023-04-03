@@ -48,6 +48,54 @@ body {
 	border-radius: 6px;
 }
 
+.menu {
+	padding-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+}
+
+.menuOption {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+}
+
+.menuOption:focus {
+	outline: none;
+}
+
+.menuOption:hover .optionIcon {
+	color: var(--right-color);
+}
+
+.menuOption:hover .optionText {
+	color: var(--right-color);
+}
+
+.menuOption:focus .optionIcon {
+	color: var(--right-color);
+}
+
+.menuOption:focus .optionText {
+	color: var(--right-color);
+}
+
+.optionIcon {
+	margin: 5px 16px 5px 16px;
+	font-size: 18px;
+	font-weight: bold;
+	color: var(--none-color);
+	transition: 200ms color ease;
+}
+
+.optionText {
+	text-transform: capitalize;
+	color: var(--none-color);
+	font-family: var(--font);
+	font-size: 16px;
+	transition: 200ms color ease;
+}
+
 .languageMenu {
 	padding-bottom: 10px;
 	display: none;
