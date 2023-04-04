@@ -61,9 +61,11 @@ for(let index = 0; index < languages.length; index++) {
 	};
 }
 
-searchInputElement.addEventListener("keyup", (event) => {
-	if(event.target.value.length > 0) {
-		searchFilter = new RegExp(event.target.value, "i");
+searchInputElement.addEventListener("input", (event) => {
+	let value = event.target.value;
+
+	if(value.length > 0) {
+		searchFilter = new RegExp(value, "i");
 	}else {
 		searchFilter = false;
 	}
