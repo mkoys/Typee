@@ -13,7 +13,7 @@ const menuElement = document.querySelector(".menu");
 
 const map = [];
 const languages = Object.keys(words);
-const wordNumber = 10;
+const wordNumber = 20;
 const prefrenceOptions = [{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions, true)}]; 
 const ignoreKeys = ["Shift", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "Meta", "Dead" ];
 
