@@ -14,16 +14,17 @@ const menuElement = document.querySelector(".menu");
 const map = [];
 const languages = Object.keys(words);
 const wordNumber = 10;
-const prefrenceOptions = [{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions)}]; 
+const prefrenceOptions = [{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions, true)}]; 
 const ignoreKeys = ["Shift", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "Meta", "Dead" ];
 
 let languageOptions = [];
 let language = "english";
 let menu = false;
-let menuWindow = false;
+let menuOptions;
 let text = "";
 let position = 0;
 let seed = 0;
+let searchFilter;
 
 popupBoxElement.style.visibility = "hidden";
 popupBoxElement.style.opacity = 0;
@@ -46,9 +47,9 @@ const resizeObserver = new ResizeObserver(_ => {
 
 resizeObserver.observe(viewElement);
 
-popupBoxElement.addEventListener("click", () => setMenu(false));
+popupBoxElement.addEventListener("click", () => setMenu(false, null, true));
 popupElement.addEventListener("click", (event) => event.stopPropagation());
-languageElement.addEventListener("click", () => setMenu(true, languageOptions));
+languageElement.addEventListener("click", () => setMenu(true, languageOptions, true));
 
 for(let index = 0; index < languages.length; index++) {
 	languageOptions[index] = {};
@@ -60,45 +61,65 @@ for(let index = 0; index < languages.length; index++) {
 	};
 }
 
+searchInputElement.addEventListener("keyup", (event) => {
+	if(event.target.value.length > 0) {
+		searchFilter = new RegExp(event.target.value, "i");
+	}else {
+		searchFilter = false;
+	}
+
+	setMenu(menu, null);
+});
+
 function randomNumberInRange(seed, min, max) {
   const x = Math.sin(seed) * 10000;
   const randomNumber = x - Math.floor(x);
   return Math.floor(randomNumber * (max - min + 1) + min);
 }
 
-function setMenu(value, options) {
+function setMenu(value, options, clear) {
 	menu = value;
+	
+	if(clear) searchFilter = false;
 
-	if(menuWindow && menu) {
-		searchInputElement.value = "";
-		menuWindow.style.display = "none";
-	}
+	if(options) menuOptions = options;
 
-	if(menu) {
+	if(!options) options = menuOptions;
+
+		if(menu) {
 		menuElement.innerHTML = "";
-		for(const option of options) {
-			const icon = option.icon;
-			const text = option.text;
-			const optionTextElement = document.createElement("p");
-			const optionIconElement = document.createElement("span");
-			const optionElement = document.createElement("div");
 
-			optionIconElement.classList.add("optionIcon", "material-symbols-outlined");
-			optionTextElement.classList.add("optionText");
-			optionElement.classList.add("menuOption");
+		if(options) {
+			for(const option of options) {
+				const icon = option.icon;
+				const text = option.text;
+				const optionTextElement = document.createElement("p");
+				const optionIconElement = document.createElement("span");
+				const optionElement = document.createElement("div");
 
-			optionIconElement.textContent = icon;
-			optionTextElement.textContent = text;
+				optionIconElement.classList.add("optionIcon", "material-symbols-outlined");
+				optionTextElement.classList.add("optionText");
+				optionElement.classList.add("menuOption");
 
-			if(option.invisible) {
-				optionIconElement.style.visibility = "hidden";
+				optionIconElement.textContent = icon;
+				optionTextElement.textContent = text;
+
+				if(option.invisible) {
+					optionIconElement.style.visibility = "hidden";
+				}
+
+				optionElement.addEventListener("click", () => option.action(option));
+
+				optionElement.appendChild(optionIconElement);
+				optionElement.appendChild(optionTextElement);
+				if(searchFilter) {
+					if(searchFilter.test(option.text)) {
+						menuElement.appendChild(optionElement);
+					}	
+				}else {
+					menuElement.appendChild(optionElement);
+				}
 			}
-
-			optionElement.addEventListener("click", () => option.action(option));
-
-			optionElement.appendChild(optionIconElement);
-			optionElement.appendChild(optionTextElement);
-			menuElement.appendChild(optionElement);
 		}
 
 		popupBoxElement.style.visibility = "visible";
@@ -106,6 +127,10 @@ function setMenu(value, options) {
 	}else {
 		popupBoxElement.style.visibility = "hidden";
 		popupBoxElement.style.opacity = 0;
+	}
+
+	if(clear) {
+		searchInputElement.value = "";
 	}
 
 	setTimeout(() => searchInputElement.focus(), 100)
@@ -124,7 +149,7 @@ function selectLanguage(target) {
 	
 	language = target.text;
 	languageTextElement.textContent = language;
-	setMenu(false);
+	setMenu(false, null, true);
 	reset();
 }
 
@@ -240,7 +265,7 @@ document.addEventListener("keydown", (event) => {
 		return reset();
 	}
 
-	if(key === "Escape") return setMenu(!menu, prefrenceOptions);
+	if(key === "Escape") return setMenu(!menu, prefrenceOptions, true);
 	if(menu) return;
 
 	const previousCharacterElement = map[position];
