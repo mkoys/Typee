@@ -243,8 +243,9 @@ header {
 	display: flex;
 	flex-wrap: wrap;
 	width: 100%;
-	height: 84px;
 	overflow: hidden;
+	max-height: 80vh;
+	align-content: baseline;
 }
 
 .cursor {
@@ -262,6 +263,7 @@ header {
 }
 
 .word {
+	height: 28px;
 	display: flex;
 }
 
@@ -286,7 +288,24 @@ header {
 		visibility: hidden;
 		opacity: 0;
 	}
+
+	.view {
+		max-height: 70vh;
+	}
 }
+
+@media only screen and (max-height: 500px) {
+	.view {
+		max-height: 40vh !important;
+	}
+}
+
+@media only screen and (max-height: 700px) {
+	.view {
+		max-height: 50vh;
+	}
+}
+
 
 @keyframes blink {
   0% { opacity: 1 }

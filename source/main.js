@@ -24,14 +24,24 @@ const wordsOptions = [
 const themeOptions = [
 	{icon: "done", text: "8008", action: () => {setTheme("8008");setMenu(false)}},
 	{icon: "done", text: "aurora", action: () => {setTheme("aurora");setMenu(false)}},
-	{icon: "done", text: "darling", action: () => {setTheme("darling");setMenu(false)}}
+	{icon: "done", text: "darling", action: () => {setTheme("darling");setMenu(false)}},
+	{icon: "done", text: "matrix", action: () => {setTheme("matrix");setMenu(false)}}
+];
+const lineViewOptions = [
+	{icon: "done", text: "3", action: () => {setLineView(3);reset();setMenu(false)}},
+	{icon: "done", text: "5", action: () => {setLineView(5);reset();setMenu(false)}},
+	{icon: "done", text: "9", action: () => {setLineView(9);reset();setMenu(false)}},
+	{icon: "done", text: "15", action: () => {setLineView(15);reset();setMenu(false)}}
 ];
 const prefrenceOptions = [
 	{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions, true)},
 	{icon: "format_bold", text: "Words", action: () => setMenu(true, wordsOptions, true)},
-	{icon: "format_paint", text: "Theme", action: () => setMenu(true, themeOptions, true)}
+	{icon: "format_paint", text: "Theme", action: () => setMenu(true, themeOptions, true)},
+	{icon: "notes", text: "View lines", action: () => setMenu(true, lineViewOptions, true)}
 ]; 
 
+let wordHeight = 28;
+let lineView = 3; 
 let wordNumber = 20;
 let languageOptions = [];
 let language = "english";
@@ -57,11 +67,13 @@ const textWidth = 14;
 renderText(generateText(), { words: true });
 setTheme(theme);
 setNumberOfWords(wordNumber);
+setLineView(lineView);
 
 const resizeObserver = new ResizeObserver(_ => {
 	const offsetLeft = map[position].offsetLeft;
 	const offsetTop = map[position].offsetTop;
 	checkScroll();
+	setLineView(lineView);
 	updateCursor(offsetLeft, offsetTop);
 });
 
@@ -105,6 +117,24 @@ function setNumberOfWords(number) {
 
 	wordNumber = number; 
 	reset(); 
+}
+
+function setLineView(value) {
+	lineView = value;
+
+	for(const option of lineViewOptions) {
+		if(parseInt(option.text) === lineView) {
+			option.invisible = false;
+		}else {
+			option.invisible = true;
+		}
+	}
+
+	if(lineView === false) {
+		return viewElement.style.height = undefined;
+	}
+
+	viewElement.style.height = value * wordHeight + "px";
 }
 
 function setTheme(newTheme) {
@@ -152,7 +182,16 @@ function setTheme(newTheme) {
 				'--wrong-color': '#2e7dde',
 			}
 		break;
-
+		case "matrix": 
+			themeObject = {
+				'--main-color': '#15ff00',
+				'--side-color': 'white',
+				'--none-color': '#003b00',
+				'--back-color': '#020202',
+				'--right-color': 'white',
+				'--wrong-color': '#da3333',
+			}
+			break;
 		default:
 			break;
 	}
@@ -337,8 +376,9 @@ function checkScroll(resolve = () => {}, reset = false) {
 	}
 
 	if (cursorPosition.y != offsetTop) {
-		if(offsetTop >= 56 || offsetTop < cursorPosition.y) {
-			viewElement.scrollTop = offsetTop - 28;
+		const realLineView = viewElement.clientHeight < wordHeight * Math.floor(lineView / 2) ? (viewElement.clientHeight - (viewElement.clientHeight % wordHeight)) / wordHeight : lineView
+		if(offsetTop >= wordHeight * Math.floor(realLineView / 2) + 1 || offsetTop < cursorPosition.y) {
+			viewElement.scrollTop = offsetTop - wordHeight * Math.floor(realLineView / 2);
 		}
 
 		resolve();
@@ -376,6 +416,7 @@ function reset() {
 	focusLogo(true);
 	checkScroll(() => {}, true);
 	renderText(generateText(), {words: true});	
+	setLineView(lineView);
 }
 
 document.addEventListener("keydown", (event) => {
@@ -461,5 +502,5 @@ document.addEventListener("keydown", (event) => {
 
 	checkScroll(() => {
 		updateCursor(backspace ? offsetLeft : 0, offsetTop)
-	});
+	}, false);
 });
