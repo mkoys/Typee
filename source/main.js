@@ -1,3 +1,11 @@
+/*
+ * Bugs: 
+* Height line change leaves empty sapce
+* Height change on Y axis doesn't update view scroll
+* Unsmooth height changes
+* Javascript language set reports more words than set to
+ */
+
 import words from "./words.js";
 
 const viewElement = document.querySelector(".view");
@@ -25,7 +33,9 @@ const themeOptions = [
 	{icon: "done", text: "8008", action: () => {setTheme("8008");setMenu(false)}},
 	{icon: "done", text: "aurora", action: () => {setTheme("aurora");setMenu(false)}},
 	{icon: "done", text: "darling", action: () => {setTheme("darling");setMenu(false)}},
-	{icon: "done", text: "matrix", action: () => {setTheme("matrix");setMenu(false)}}
+	{icon: "done", text: "matrix", action: () => {setTheme("matrix");setMenu(false)}},
+	{icon: "done", text: "Tron orange", action: () => {setTheme("tron");setMenu(false)}}
+
 ];
 const lineViewOptions = [
 	{icon: "done", text: "3", action: () => {setLineView(3);reset();setMenu(false)}},
@@ -37,7 +47,7 @@ const prefrenceOptions = [
 	{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions, true)},
 	{icon: "format_bold", text: "Words", action: () => setMenu(true, wordsOptions, true)},
 	{icon: "format_paint", text: "Theme", action: () => setMenu(true, themeOptions, true)},
-	{icon: "notes", text: "View lines", action: () => setMenu(true, lineViewOptions, true)}
+	{icon: "notes", text: "Line view", action: () => setMenu(true, lineViewOptions, true)}
 ]; 
 
 let wordHeight = 28;
@@ -172,6 +182,16 @@ function setTheme(newTheme) {
 				'--wrong-color': '#b94da1',
 			}
 		break;
+		case "tron": 
+			themeObject = {
+				'--main-color': '#f0e800',
+				'--side-color': 'white',
+				'--none-color': '#f60',
+				'--back-color': '#0d1c1c',
+				'--right-color': 'white',
+				'--wrong-color': 'red',
+			}
+			break;
 		case "darling": 
 				themeObject = {
 				'--main-color': 'white',
