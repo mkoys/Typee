@@ -20,15 +20,22 @@ const wordsOptions = [
 	{icon: "done", text: 30, action: () => {setNumberOfWords(30); setMenu(false)}},
 	{icon: "done", text: 50, action: () => {setNumberOfWords(50); setMenu(false)}},
 	{icon: "done", text: 100, action: () => {setNumberOfWords(100); setMenu(false)}}
-]
+];
+const themeOptions = [
+	{icon: "done", text: "8008", action: () => {setTheme("8008");setMenu(false)}},
+	{icon: "done", text: "aurora", action: () => {setTheme("aurora");setMenu(false)}},
+	{icon: "done", text: "darling", action: () => {setTheme("darling");setMenu(false)}}
+];
 const prefrenceOptions = [
 	{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions, true)},
-	{icon: "format_bold", text: "Words", action: () => setMenu(true, wordsOptions, true)}
+	{icon: "format_bold", text: "Words", action: () => setMenu(true, wordsOptions, true)},
+	{icon: "format_paint", text: "Theme", action: () => setMenu(true, themeOptions, true)}
 ]; 
 
 let wordNumber = 20;
 let languageOptions = [];
 let language = "english";
+let theme = localStorage.getItem("theme"); 
 let menu = false;
 let menuFocus = false;
 let menuOptions;
@@ -48,6 +55,7 @@ cursorElement.style.left = 0;
 const textWidth = 14;
 
 renderText(generateText(), { words: true });
+setTheme(theme);
 setNumberOfWords(wordNumber);
 
 const resizeObserver = new ResizeObserver(_ => {
@@ -97,6 +105,61 @@ function setNumberOfWords(number) {
 
 	wordNumber = number; 
 	reset(); 
+}
+
+function setTheme(newTheme) {
+	theme = newTheme;
+	let themeObject = {};
+
+	localStorage.setItem("theme", theme);
+	
+	for(const option of themeOptions) {
+		if(option.text === theme) {
+			option.invisible = false;
+		}else {
+			option.invisible = true;
+		}
+	}
+
+	switch(theme) {
+		case "8008":
+			themeObject = {
+				'--main-color': '#f44c7f',
+				'--side-color': 'white',
+				'--none-color': '#939eae',
+				'--back-color': '#333a45',
+				'--right-color': 'white',
+				'--wrong-color': '#da3333',
+			}
+			break;
+		case "aurora": 
+				themeObject = {
+				'--main-color': '#00e980',
+				'--side-color': 'white',
+				'--none-color': '#245c69',
+				'--back-color': '#011926',
+				'--right-color': 'white',
+				'--wrong-color': '#b94da1',
+			}
+		break;
+		case "darling": 
+				themeObject = {
+				'--main-color': 'white',
+				'--side-color': 'white',
+				'--none-color': '#a30000',
+				'--back-color': '#fec8cd',
+				'--right-color': 'white',
+				'--wrong-color': '#2e7dde',
+			}
+		break;
+
+		default:
+			break;
+	}
+
+	const themeObjectKeys = Object.keys(themeObject);
+
+	themeObjectKeys.forEach(rule => document.documentElement.style.setProperty(rule, themeObject[rule]));
 }
 
 function randomNumberInRange(seed, min, max) {
