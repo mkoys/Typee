@@ -41,7 +41,10 @@ body {
 }
 
 .popup {
-	overflow-y: auto;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 	max-width: 600px;
 	max-height: 70vh;
 	min-height: 54px;
@@ -54,6 +57,7 @@ body {
 }
 
 .menu {
+	overflow-y: auto;
 	padding-bottom: 10px;
 	display: flex;
 	flex-direction: column;
@@ -98,6 +102,8 @@ body {
 }
 
 .search {
+	top: auto;
+	left: auto;
 	background-color: var(--back-color);
 	border-radius: 6px;
 	position: fixed;
@@ -127,6 +133,7 @@ body {
 }
 
 .searchFiller {
+	min-height: 22px;
 	height: 22px;
 	padding: 16px;
 }

@@ -190,6 +190,8 @@ function updateMenuFocus(adder, setter = false, reset = false, remove = false) {
 		if(menuElement.children.length <= menuFocus) menuFocus = 0;
 		if(menuElement.children[menuFocus]) menuElement.children[menuFocus].classList.add("focus");
 	}
+
+	if(menuElement.children[menuFocus]) menuElement.children[menuFocus].scrollIntoView(true);
 }
 
 function setMenu(value, options, clear) {
