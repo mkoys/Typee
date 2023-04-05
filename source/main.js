@@ -13,10 +13,20 @@ const menuElement = document.querySelector(".menu");
 
 const map = [];
 const languages = Object.keys(words);
-const wordNumber = 20;
-const prefrenceOptions = [{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions, true)}]; 
 const ignoreKeys = ["Shift", "Alt", "Control", "Delete", "Enter", "CapsLock", "Home", "Insert", "PageUp", "PageDown", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Pause", "ScrollLock", "PrintScreen", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "Meta", "Dead" ];
+const wordsOptions = [
+	{icon: "done", text: 10, action: () => {setNumberOfWords(10); setMenu(false)}},
+	{icon: "done", text: 20, action: () => {setNumberOfWords(20); setMenu(false)}},
+	{icon: "done", text: 30, action: () => {setNumberOfWords(30); setMenu(false)}},
+	{icon: "done", text: 50, action: () => {setNumberOfWords(50); setMenu(false)}},
+	{icon: "done", text: 100, action: () => {setNumberOfWords(100); setMenu(false)}}
+]
+const prefrenceOptions = [
+	{icon: "translate", text: "Language", action: () => setMenu(true, languageOptions, true)},
+	{icon: "format_bold", text: "Words", action: () => setMenu(true, wordsOptions, true)}
+]; 
 
+let wordNumber = 20;
 let languageOptions = [];
 let language = "english";
 let menu = false;
@@ -38,6 +48,7 @@ cursorElement.style.left = 0;
 const textWidth = 14;
 
 renderText(generateText(), { words: true });
+setNumberOfWords(wordNumber);
 
 const resizeObserver = new ResizeObserver(_ => {
 	const offsetLeft = map[position].offsetLeft;
@@ -74,6 +85,19 @@ searchInputElement.addEventListener("input", (event) => {
 	setMenu(menu, null);
 	updateMenuFocus(false, false, true);
 });
+
+function setNumberOfWords(number) {
+	for(const option of wordsOptions) {
+		if(option.text === number) {
+			option.invisible = false;
+		}else {
+			option.invisible = true;
+		}
+	}
+
+	wordNumber = number; 
+	reset(); 
+}
 
 function randomNumberInRange(seed, min, max) {
   const x = Math.sin(seed) * 10000;
