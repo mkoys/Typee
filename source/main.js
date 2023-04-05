@@ -20,6 +20,7 @@ const ignoreKeys = ["Shift", "Alt", "Control", "Delete", "Enter", "CapsLock", "H
 let languageOptions = [];
 let language = "english";
 let menu = false;
+let menuFocus = false;
 let menuOptions;
 let text = "";
 let position = 0;
@@ -69,14 +70,39 @@ searchInputElement.addEventListener("input", (event) => {
 	}else {
 		searchFilter = false;
 	}
-
+	
 	setMenu(menu, null);
+	updateMenuFocus(false, false, true);
 });
 
 function randomNumberInRange(seed, min, max) {
   const x = Math.sin(seed) * 10000;
   const randomNumber = x - Math.floor(x);
   return Math.floor(randomNumber * (max - min + 1) + min);
+}
+
+function updateMenuFocus(adder, setter = false, reset = false, remove = false) {
+	if(reset) {
+		if(menuFocus !== false && menuElement.children[menuFocus]) menuElement.children[menuFocus].classList.remove("focus");
+		menuFocus = remove === false ? 0 : false;
+		if(menuElement.children[menuFocus]) menuElement.children[menuFocus].classList.add("focus");
+		return;
+	}
+
+	if(menuFocus === false && setter === false) {
+		menuFocus = adder > 0 ? 0 : menuElement.children.length - 1;
+		if(menuElement.children[menuFocus]) menuElement.children[menuFocus].classList.add("focus");
+	}else {
+		if(menuFocus !== false && menuElement.children[menuFocus]) menuElement.children[menuFocus].classList.remove("focus");
+		if(setter !== false) {
+			menuFocus = setter;
+		}else {
+			menuFocus += adder;
+		}
+		if(menuFocus < 0) menuFocus = menuElement.children.length - 1;
+		if(menuElement.children.length <= menuFocus) menuFocus = 0;
+		if(menuElement.children[menuFocus]) menuElement.children[menuFocus].classList.add("focus");
+	}
 }
 
 function setMenu(value, options, clear) {
@@ -92,7 +118,8 @@ function setMenu(value, options, clear) {
 		menuElement.innerHTML = "";
 
 		if(options) {
-			for(const option of options) {
+			for(let elementIndex = 0; elementIndex < options.length; elementIndex++) {
+				const option = options[elementIndex];
 				const icon = option.icon;
 				const text = option.text;
 				const optionTextElement = document.createElement("p");
@@ -109,6 +136,9 @@ function setMenu(value, options, clear) {
 				if(option.invisible) {
 					optionIconElement.style.visibility = "hidden";
 				}
+
+				optionElement.addEventListener("mouseenter", () => updateMenuFocus(null, elementIndex));
+				optionElement.addEventListener("mouseleave", () => updateMenuFocus(false, false, true, true));
 
 				optionElement.addEventListener("click", () => option.action(option));
 
@@ -133,6 +163,7 @@ function setMenu(value, options, clear) {
 
 	if(clear) {
 		searchInputElement.value = "";
+		updateMenuFocus(false, false, true);
 	}
 
 	setTimeout(() => searchInputElement.focus(), 100)
@@ -268,7 +299,23 @@ document.addEventListener("keydown", (event) => {
 	}
 
 	if(key === "Escape") return setMenu(!menu, prefrenceOptions, true);
-	if(menu) return;
+	if(menu) {
+		switch(key) {
+			case "ArrowDown": 
+				updateMenuFocus(1);
+			break;
+			case "ArrowUp":
+				updateMenuFocus(-1);
+			break;
+			case "Enter":
+				menuElement.children[menuFocus].click();
+			break;
+		default:
+			break;
+		}
+		
+		return;
+	};
 
 	const previousCharacterElement = map[position];
 	

@@ -65,23 +65,19 @@ body {
 	align-items: center;
 }
 
-.menuOption:focus {
-	outline: none;
-}
-
-.menuOption:hover .optionIcon {
+.focus .optionIcon {
 	color: var(--right-color);
 }
 
-.menuOption:hover .optionText {
+.focus .optionText {
 	color: var(--right-color);
 }
 
-.menuOption:focus .optionIcon {
+.menuElement:hover .optionIcon {
 	color: var(--right-color);
 }
 
-.menuOption:focus .optionText {
+.menuElement:hover .optionText {
 	color: var(--right-color);
 }
 
