@@ -40011,16 +40011,19 @@ NaN
 undefined
 typeof
 prompt
-else if
+else
+if
 ||
 &&
 i++
 label
 switch
 case
-use strict
+use
+strict
 assert
-new Object()
+new
+Object()
 delete
 Object.assign()
 Symbol()

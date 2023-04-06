@@ -1,9 +1,6 @@
 /*
  * Bugs: 
-* Height line change leaves empty sapce
 * Height change on Y axis doesn't update view scroll
-* Unsmooth height changes
-* Javascript language set reports more words than set to
  */
 
 import words from "./words.js";
@@ -141,10 +138,10 @@ function setLineView(value) {
 	}
 
 	if(lineView === false) {
-		return viewElement.style.height = undefined;
+		return viewElement.style.maxHeight = undefined;
 	}
 
-	viewElement.style.height = value * wordHeight + "px";
+	viewElement.style.maxHeight = value * wordHeight + "px";
 }
 
 function setTheme(newTheme) {
