@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Cousine:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+  --font: 'Cousine', monospace;
+  --background-color: black;
+  --placeholder-color: lime;
+  --right-color: white;
+  --wrong-color: red;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+  font-family: var(--font);
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color);
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  cursor: pointer;
+  margin: 20px;
+  width: fit-content;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.logo:hover > .logoText {
+  color: var(--right-color);
+}
+
+.logo:hover > .logoIcon{
+  fill: var(--right-color);
+}
+
+.logoIcon {
+  fill: var(--placeholder-color);
+  transition: 0.2s ease fill;
+}
+
+.logoText {
+  margin-left: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--placeholder-color);
+  font-family: var(--font);
+  transition: 0.2s ease color;
+}
+
+.main {
+  overflow-y: hidden;
+  overflow-x: visible;
+  max-width: 50%;
+  width: fit-content;
+  position: relative;
+}
+
+.cursor {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  transition: 0.08s linear all;
+}
+
+.cursorBody {
+  width: 100%;
+  height: 2px;
+  background-color: var(--placeholder-color);
+}
+
+.text {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.word {
+  display: flex;
+}
+
+.char {
+  font-family: var(--font);
+  font-size: 24px;
+  color: var(--placeholder-color);
+}
+
+.right {
+  color: var(--right-color);
+}
+
+.wrong {
+  color: var(--wrong-color);
+}
