@@ -55,9 +55,9 @@ renderText(text);
 const resizeObserver = new ResizeObserver(_entries => updateView({ force: true }));
 resizeObserver.observe(textElement);
 
-menuSearchElement.addEventListener("keyup", event => {
+menuSearchElement.addEventListener("keydown", event => {
   if(ignoreKeys.findIndex(key => key === event.key) > -1) return;
-  const filter = menuSearchElement.value;
+  const filter = event.key === "Backspace" ?  menuSearchElement.value.slice(0, menuSearchElement.value.length - 1) : menuSearchElement.value + event.key;
   loadMenu({filter});
 });
 
