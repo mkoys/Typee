@@ -6,11 +6,18 @@ const cursorElement = document.querySelector(".cursor");
 const popUpElement = document.querySelector(".popup");
 const menuSearchElement = document.querySelector(".menuInput");
 const menuOptionsElement = document.querySelector(".menuOptions");
+const resultsElement = document.querySelector(".results");
+const resultsRightElement = document.querySelector(".resultsRight");
+const resultsWrongElement = document.querySelector(".resultsWrong");
+const resultsTimeElement = document.querySelector(".resultsTime");
+const resultsWpmElement = document.querySelector(".resultsWPM");
+const resultsPresicionElement = document.querySelector(".resultsPresicion");
 
 const fontFamily = "Cousine";
 const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
 const funtionKeys = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"];
 const ignoreKeys = ["Shift", "Alt", "CapsLock", "Enter", "Controll", "Delete", "Insert", "Home", "End", "PageUp", "PageDown", "ScrollLock", "Pause", ...funtionKeys, ...arrowKeys];
+const resizeObserver = new ResizeObserver(_entries => updateView({ force: true }));
 const visibleLines = 3;
 
 const mainMenu = [
@@ -28,10 +35,12 @@ const mainMenu = [
   }
 ];
 
+let time = 0;
 let textLength = 20;
 let textLanguage = "english";
 let menuOptions = [];
 let menuSelected = 0;
+let resultOpen = false;
 let fontSize = 24;
 let text = "";
 let cursorCss;
@@ -46,14 +55,13 @@ let right = 0;
 let wrong = 0;
 let timer = null;
 let menuOpen = false;
+let precision = 0;
+let wpm = 0;
 
 calibrate();
 loadMenu({options: mainMenu});
 generateText(textLength);
 renderText(text);
-
-const resizeObserver = new ResizeObserver(_entries => updateView({ force: true }));
-resizeObserver.observe(textElement);
 
 menuSearchElement.addEventListener("keydown", event => {
   if(ignoreKeys.findIndex(key => key === event.key) > -1) return;
@@ -79,9 +87,10 @@ document.addEventListener("keydown", event => {
   if(!menuOpen) {
     if(event.key === "Tab") {
       event.preventDefault();
-      reset();
-      generateText(textLength);
-      renderText(text);
+        reset();
+        generateText(textLength);
+        renderText(text);
+      if(resultOpen) openResults(false);
     }else if(event.key === "Backspace") {
       cursorBack();
       const currentCharacter = textElement.children[wordPosition].children[characterPosition];
@@ -102,6 +111,36 @@ document.addEventListener("keydown", event => {
     }
   }
 });
+
+function openResults(action) {
+  if(action) {
+    resizeObserver.unobserve(textElement);
+    mainElement.classList.add("disapear");
+    resultOpen = true;
+    setTimeout(() => {
+      mainElement.style.display = "none";
+      resultsElement.style.display = "flex";
+      setTimeout(() => {
+        resultsRightElement.textContent = `Right: ${right}`;
+        resultsWrongElement.textContent = `Wrong: ${wrong}`;
+        resultsPresicionElement.textContent = `Precision: ${Number(precision).toFixed(2)}%`;
+        resultsTimeElement.textContent = `Time: ${time}s`;
+        resultsWpmElement.textContent = `WPM: ${(text.split(" ").length / time) * 60}`;
+        resultsElement.classList.add("appear");
+      }, 10);
+    }, 200);
+  }else {
+    resultsElement.classList.remove("appear");
+    resultOpen = false;
+    setTimeout(() => {
+      resultsElement.style.display = null;
+      mainElement.style.display = null;
+      setTimeout(() => {
+        mainElement.classList.remove("disapear");
+      }, 10);
+    }, 200);
+  }
+}
 
 function openMenu(action) {
   if(action === undefined) {
@@ -284,17 +323,11 @@ function cursorNext(times = 1) {
       characterPosition = 0;
       wordPosition++;
       if(wordPosition >= textElement.children.length) { 
-        const precision = right / (text.length / 100);
-        const time = Math.floor((performance.now() - timer) / 1000);
-        console.log(`Right: ${right}`);
-        console.log(`Wrong: ${wrong}`);
-        console.log(`Precision: ${Number(precision).toFixed(2)}`);
-        console.log(`Time: ${time}s`);
-        console.log(`WPM: ${(text.split(" ").length / time) * 60}`);
-
-        reset();
-        generateText(textLength);
-        renderText(text);
+        precision = right / (text.length / 100);
+        time = Math.floor((performance.now() - timer) / 1000);
+        wpm = (text.split(" ").length / time) * 60;
+        openResults(true);
+        return;
       }
     }
   }
@@ -344,6 +377,7 @@ function cursorUpdate() {
 }
 
 function renderText(text) {
+  resizeObserver.unobserve(textElement);
   textElement.innerHTML = "";
   const words = text.split(" ").map((word, wordIndex) => wordIndex !== text.split(" ").length - 1 ? word + " " : word);
 
@@ -353,6 +387,8 @@ function renderText(text) {
     generateCharacters(word, wordElement);
     textElement.appendChild(wordElement);
   });
+
+  resizeObserver.observe(textElement);
 }
 
 function generateCharacters(text, element) {

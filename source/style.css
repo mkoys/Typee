@@ -104,6 +104,35 @@ html, body {
   font-size: 13px;
 }
 
+.disapear {
+  transform: scale(0);
+}
+
+.results {
+  display: none;
+  transform: scale(0);
+  max-width: 50%;
+  width: fit-content;
+  position: relative;
+  overflow: visible;
+  transition: 0.2s ease transform;
+}
+
+.resultsCard {
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.appear {
+  transform: scale(1);
+}
+
+.resultsText {
+  color: var(--placeholder-color);
+  font-size: 20px;
+}
+
 .logo {
   cursor: pointer;
   margin: 20px;
@@ -142,6 +171,7 @@ html, body {
 }
 
 .main {
+  transition: 0.2s ease transform;
   overflow-y: hidden;
   overflow-x: visible;
   max-width: 50%;
