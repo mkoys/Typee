@@ -2,8 +2,8 @@
 
 :root {
   --font: 'Cousine', monospace;
-  --background-color: black;
-  --placeholder-color: lime;
+  --background-color: #121212;
+  --placeholder-color: yellow;
   --right-color: white;
   --wrong-color: red;
 }
@@ -24,11 +24,92 @@ html, body {
 }
 
 .container {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.popup {
+  visibility: hidden;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(8px);
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.8);
+  transition: 0.2s ease visibility, 0.2s ease opacity;
+}
+
+.menu {
+  overflow: hidden;
+  margin: 20px;
+  max-width: 600px;
+  width: calc(100% - 40px);
+  position: absolute;
+  background-color: var(--background-color);
+  border-radius: 10px;
+}
+
+.menuHeader {
+  padding: 16px 16px;
+  width: 100%;
+  max-width: 550px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menuInput {
+  font-size: 18px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: var(--right-color);
+  width: 100%;
+}
+
+.searchIcon {
+  margin-right: 10px;
+  fill: var(--placeholder-color);
+}
+
+.menuOptions {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuOption {
+  transition: 0.1s ease background-color;
+  padding: 10px 16px;
+}
+
+.selected {
+  background-color: var(--right-color);
+}
+
+.selected > .menuOptionText {
+  color: var(--background-color);
+}
+
+.menuOption:hover {
+  background-color: var(--right-color);
+}
+
+.menuOption:hover > .menuOptionText {
+  color: var(--background-color);
+}
+
+.menuOptionText {
+  transition: 0.1s ease color;
+  color: var(--right-color);
+  font-size: 13px;
 }
 
 .logo {
@@ -46,11 +127,16 @@ html, body {
 
 .logo:hover > .logoIcon{
   fill: var(--right-color);
+  transform: rotate(180deg);
 }
 
 .logoIcon {
   fill: var(--placeholder-color);
-  transition: 0.2s ease fill;
+  transition: 0.2s ease fill, 0.2s ease transform;
+}
+
+.logoSpan {
+  color: var(--placeholder-color);
 }
 
 .logoText {
