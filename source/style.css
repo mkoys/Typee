@@ -98,14 +98,6 @@ html, body {
   color: var(--background-color);
 }
 
-.menuOption:hover {
-  background-color: var(--right-color);
-}
-
-.menuOption:hover > .menuOptionText {
-  color: var(--background-color);
-}
-
 .menuOptionText {
   transition: 0.1s ease color;
   color: var(--right-color);
