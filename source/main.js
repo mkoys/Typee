@@ -14,7 +14,6 @@ const resultsWpmElement = document.querySelector(".resultsWPM");
 const resultsPresicionElement = document.querySelector(".resultsPresicion");
 const timerElement = document.querySelector(".timer");
 
-
 const fontFamily = "Cousine";
 const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
 const funtionKeys = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"];
@@ -95,7 +94,7 @@ document.addEventListener("keydown", event => {
 
   if(ignoreKeys.findIndex(key => key === event.key) > -1) return;
 
-  if(!resultOpen) {
+  if(!resultOpen && !menuOpen) {
     if(!timer) timer = performance.now();
     timeMode();
   }
