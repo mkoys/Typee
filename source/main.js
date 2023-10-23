@@ -133,6 +133,7 @@ function openResults(action) {
   }else {
     resultsElement.classList.remove("appear");
     resultOpen = false;
+    timer = null;
     setTimeout(() => {
       resultsElement.style.display = null;
       mainElement.style.display = null;
