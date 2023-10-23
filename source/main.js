@@ -404,7 +404,10 @@ function loadMenu({ options, filter }) {
       menuOptionElement.appendChild(menuOptionTextElement);
       menuOptionsElement.appendChild(menuOptionElement);
       menuOptionElement.addEventListener("click", _event => option.action());
-      menuOptionElement.addEventListener("mouseenter", _event => menuSelect(optionIndex));
+      menuOptionElement.addEventListener("mouseenter", _event => {
+        const children = [...event.srcElement.parentNode.children];
+        menuSelect(children.findIndex(element => element === event.srcElement));
+      });
     }
   });
 
