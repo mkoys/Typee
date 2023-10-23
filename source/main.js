@@ -9,10 +9,12 @@ const menuOptionsElement = document.querySelector(".menuOptions");
 const resultsElement = document.querySelector(".results");
 const resultsRightElement = document.querySelector(".resultsRight");
 const resultsWrongElement = document.querySelector(".resultsWrong");
+const resultsMistakesElement = document.querySelector(".resultsMistakes");
 const resultsTimeElement = document.querySelector(".resultsTime");
 const resultsWpmElement = document.querySelector(".resultsWPM");
 const resultsCpmElement = document.querySelector(".resultsCPM");
 const resultsPresicionElement = document.querySelector(".resultsPresicion");
+const resultsRealPresicionElement = document.querySelector(".resultsRealPresicion");
 const timerElement = document.querySelector(".timer");
 
 const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
@@ -95,6 +97,7 @@ let characterHeight = 0;
 let right = 0;
 let typedWords = 0;
 let wrong = 0;
+let mistakes = 0;
 let timer = null;
 let menuOpen = false;
 let precision = 0;
@@ -155,6 +158,7 @@ document.addEventListener("keydown", event => {
       }else {
         currentCharacter.classList.add("wrong");
         wrong++;
+        mistakes++;
       }
       cursorNext();
     }
@@ -186,12 +190,15 @@ function checkTimer() {
 function openResults(action) {
   if(action) {
     precision = right / ((right + wrong) / 100);
+    const realPrecision = right / ((right + mistakes) / 100);
     wpm = Math.floor((typedWords / ((performance.now() - timer) / 1000)) * 60);
     
     resultsRightElement.textContent = `Right: ${right}`;
     resultsWrongElement.textContent = `Wrong: ${wrong}`;
+    resultsMistakesElement.textContent = `Mistakes: ${mistakes}`;
     resultsPresicionElement.textContent = `Precision: ${Number(precision).toFixed(2)}%`;
-    resultsTimeElement.textContent = `Time: ${Number((performance.now() - timer) / 1000).toFixed(2)}s`;
+    resultsRealPresicionElement.textContent = `Real Precision: ${Number(realPrecision).toFixed(2)}%`;
+    resultsTimeElement.textContent = `Time: ${Math.floor((performance.now() - timer) / 1000)}s`;
     resultsWpmElement.textContent = `WPM: ${wpm}`;
     resultsCpmElement.textContent = `CPM: ${Math.floor(((right + wrong) / ((performance.now() - timer) / 1000)) * 60)}`;
     resizeObserver.unobserve(textElement);
@@ -414,6 +421,7 @@ function reset() {
   typedWords = 0;
   right = 0;
   wrong = 0;
+  mistakes = 0;
   wordPosition = 0;
   characterPosition = 0;
   updateView({ force: true });
