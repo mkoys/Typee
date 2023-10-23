@@ -21,10 +21,42 @@ const ignoreKeys = ["Escape", "Shift", "Alt", "CapsLock", "Enter", "Control", "D
 const resizeObserver = new ResizeObserver(_entries => updateView({ force: true }));
 const visibleLines = 3;
 
+const themes = [
+  {
+    name: "Buldoser",
+    background: "#121212",
+    placeholder: "yellow",
+    right: "white",
+    wrong: "red"
+  },
+  {
+    name: "Terminal",
+    background: "black",
+    placeholder: "lime",
+    right: "white",
+    wrong: "red"
+  },
+  {
+    name: "Rose",
+    background: "#f37f83",
+    placeholder: "#e53c58",
+    right: "white",
+    wrong: "#fcd23f"
+  }
+];
+
 const mainMenu = [
   {
     name: "Language...",
     action: () => menuLanguage()
+  },
+  {
+    name: "Timer...",
+    action: () => menuTimer()
+  },
+  {
+    name: "Theme...",
+    action: () => menuTheme()
   },
   {
     name: "Font Size...",
@@ -35,11 +67,7 @@ const mainMenu = [
     action: () => menuWordCount()
   },
   {
-    name: "Timer...",
-    action: () => menuTimer()
-  },
-  {
-    name: "Font...",
+    name: "Font Family...",
     action: () => menuFontFamily()
   }
 ];
@@ -269,6 +297,25 @@ function menuWordCount() {
   ];
 
   loadMenu({options: countMenu});
+}
+
+
+function menuTheme() {
+  const changeTheme = (newTheme) => {
+    const theme = themes[themes.findIndex(item => item.name === newTheme)];
+    document.documentElement.style.setProperty("--background-color", theme.background);
+    document.documentElement.style.setProperty("--placeholder-color", theme.placeholder);
+    document.documentElement.style.setProperty("--right-color", theme.right);
+    document.documentElement.style.setProperty("--wrong-color", theme.wrong);
+    openMenu(false);
+    setTimeout(() => loadMenu({options: mainMenu}), 200);
+  }
+
+  const themeMenu = themes.map(theme => { 
+    return { name: theme.name, action: () => changeTheme(theme.name) }
+  });
+
+  loadMenu({options: themeMenu});
 }
 
 function menuFontFamily() {

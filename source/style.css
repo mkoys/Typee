@@ -45,7 +45,8 @@ html, body {
 }
 
 .content {
-  max-width: 50%;
+  margin: 0px 20px;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   align-items: center;
