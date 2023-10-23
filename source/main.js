@@ -12,6 +12,8 @@ const resultsWrongElement = document.querySelector(".resultsWrong");
 const resultsTimeElement = document.querySelector(".resultsTime");
 const resultsWpmElement = document.querySelector(".resultsWPM");
 const resultsPresicionElement = document.querySelector(".resultsPresicion");
+const timerElement = document.querySelector(".timer");
+
 
 const fontFamily = "Cousine";
 const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
@@ -32,10 +34,16 @@ const mainMenu = [
   {
     name: "Word Count...",
     action: () => menuWordCount()
+  },
+  {
+    name: "Timer...",
+    action: () => menuTimer()
   }
 ];
 
 let time = 0;
+let timed = true;
+let timeEnd = 10;
 let textLength = 20;
 let textLanguage = "english";
 let menuOptions = [];
@@ -52,11 +60,13 @@ let wordPosition = 0;
 let characterPosition = 0;
 let characterHeight = 0;
 let right = 0;
+let typedWords = 0;
 let wrong = 0;
 let timer = null;
 let menuOpen = false;
 let precision = 0;
 let wpm = 0;
+let timerInterval = null;
 
 calibrate();
 loadMenu({options: mainMenu});
@@ -71,7 +81,6 @@ menuSearchElement.addEventListener("keydown", event => {
 });
 
 document.addEventListener("keydown", event => {
-  if(!timer) timer = performance.now();
   if(event.key === "Escape") return openMenu();
   if(event.key === "ArrowUp" && menuOpen) menuSelect(menuSelected - 1);
   if(event.key === "ArrowDown" && menuOpen) menuSelect(menuSelected + 1);
@@ -85,6 +94,12 @@ document.addEventListener("keydown", event => {
   }
 
   if(ignoreKeys.findIndex(key => key === event.key) > -1) return;
+
+  if(!resultOpen) {
+    if(!timer) timer = performance.now();
+    timeMode();
+  }
+
   if(!menuOpen) {
     if(event.key === "Tab") {
       event.preventDefault();
@@ -113,8 +128,37 @@ document.addEventListener("keydown", event => {
   }
 });
 
+function timeMode() {
+  if(timerInterval === null) {
+    if(timed) {
+      timerElement.textContent = timeEnd;
+      timerElement.style.opacity = 1;
+      timerInterval = setInterval(checkTimer, 1000);
+    }else {
+      timerElement.style.opacity = null;
+    }
+  }
+}
+
+function checkTimer() {
+  timerElement.textContent = timeEnd - Math.floor((performance.now() - timer) / 1000);
+  if((performance.now() - timer) / 1000 >= timeEnd) {
+    timerElement.style.opacity = null;
+    openResults(true);
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
 function openResults(action) {
   if(action) {
+    precision = right / (text.length / 100);
+    wpm = Math.floor((typedWords / ((performance.now() - timer) / 1000)) * 60);
+    resultsRightElement.textContent = `Right: ${right}`;
+    resultsWrongElement.textContent = `Wrong: ${wrong}`;
+    resultsPresicionElement.textContent = `Precision: ${Number(precision).toFixed(2)}%`;
+    resultsTimeElement.textContent = `Time: ${Number((performance.now() - timer) / 1000).toFixed(2)}s`;
+    resultsWpmElement.textContent = `WPM: ${wpm}`;
     resizeObserver.unobserve(textElement);
     mainElement.classList.add("disapear");
     resultOpen = true;
@@ -122,11 +166,6 @@ function openResults(action) {
       mainElement.style.display = "none";
       resultsElement.style.display = "flex";
       setTimeout(() => {
-        resultsRightElement.textContent = `Right: ${right}`;
-        resultsWrongElement.textContent = `Wrong: ${wrong}`;
-        resultsPresicionElement.textContent = `Precision: ${Number(precision).toFixed(2)}%`;
-        resultsTimeElement.textContent = `Time: ${time}s`;
-        resultsWpmElement.textContent = `WPM: ${(text.split(" ").length / time) * 60}`;
         resultsElement.classList.add("appear");
       }, 10);
     }, 200);
@@ -225,6 +264,29 @@ function menuWordCount() {
   loadMenu({options: countMenu});
 }
 
+function menuTimer() {
+  const changeCount = (action, newTime) => {
+    timeEnd = newTime ? newTime : timeEnd; 
+    timed = action;
+    reset();
+    generateText(textLength);
+    renderText(text);
+    openMenu(false);
+    setTimeout(() => loadMenu({options: mainMenu}), 200);
+  }
+
+  const countMenu = [
+    { name: "5 sconds", action: () => changeCount(true, 5) },
+    { name: "10 sconds", action: () => changeCount(true, 10) },
+    { name: "15 sconds", action: () => changeCount(true, 15) },
+    { name: "30 sconds", action: () => changeCount(true, 30) },
+    { name: "1 minute", action: () => changeCount(true, 60) },
+    { name: "Off", action: () => changeCount(false) }
+  ];
+
+  loadMenu({options: countMenu});
+}
+
 function menuSelect(index) {
   if(menuOptionsElement.children.length > 0) {
     if(menuOptionsElement.children.length > menuSelected && menuSelected > -1) menuOptionsElement.children[menuSelected].classList.remove("selected");
@@ -269,6 +331,13 @@ function loadMenu({ options, filter }) {
 }
 
 function reset() {
+  if(timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timer = null;
+    timerElement.style.opacity = null;
+  }
+  typedWords = 0;
   right = 0;
   wrong = 0;
   wordPosition = 0;
@@ -324,11 +393,10 @@ function cursorNext(times = 1) {
     if(characterPosition >= textElement.children[wordPosition].children.length) {
       characterPosition = 0;
       wordPosition++;
+      typedWords++;
       if(wordPosition >= textElement.children.length) { 
-        precision = right / (text.length / 100);
-        time = Math.floor((performance.now() - timer) / 1000);
-        wpm = (text.split(" ").length / time) * 60;
         openResults(true);
+        reset();
         return;
       }
     }
