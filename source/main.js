@@ -11,6 +11,7 @@ const resultsRightElement = document.querySelector(".resultsRight");
 const resultsWrongElement = document.querySelector(".resultsWrong");
 const resultsTimeElement = document.querySelector(".resultsTime");
 const resultsWpmElement = document.querySelector(".resultsWPM");
+const resultsCpmElement = document.querySelector(".resultsCPM");
 const resultsPresicionElement = document.querySelector(".resultsPresicion");
 const timerElement = document.querySelector(".timer");
 
@@ -151,13 +152,15 @@ function checkTimer() {
 
 function openResults(action) {
   if(action) {
-    precision = right / (text.length / 100);
+    precision = right / ((right + wrong) / 100);
     wpm = Math.floor((typedWords / ((performance.now() - timer) / 1000)) * 60);
+    
     resultsRightElement.textContent = `Right: ${right}`;
     resultsWrongElement.textContent = `Wrong: ${wrong}`;
     resultsPresicionElement.textContent = `Precision: ${Number(precision).toFixed(2)}%`;
     resultsTimeElement.textContent = `Time: ${Number((performance.now() - timer) / 1000).toFixed(2)}s`;
     resultsWpmElement.textContent = `WPM: ${wpm}`;
+    resultsCpmElement.textContent = `CPM: ${Math.floor(((right + wrong) / ((performance.now() - timer) / 1000)) * 60)}`;
     resizeObserver.unobserve(textElement);
     mainElement.classList.add("disapear");
     resultOpen = true;
