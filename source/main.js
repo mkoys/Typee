@@ -15,7 +15,6 @@ const resultsCpmElement = document.querySelector(".resultsCPM");
 const resultsPresicionElement = document.querySelector(".resultsPresicion");
 const timerElement = document.querySelector(".timer");
 
-const fontFamily = "Cousine";
 const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
 const funtionKeys = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"];
 const ignoreKeys = ["Escape", "Shift", "Alt", "CapsLock", "Enter", "Control", "Delete", "Insert", "Home", "End", "PageUp", "PageDown", "ScrollLock", "Pause", ...funtionKeys, ...arrowKeys];
@@ -38,6 +37,10 @@ const mainMenu = [
   {
     name: "Timer...",
     action: () => menuTimer()
+  },
+  {
+    name: "Font...",
+    action: () => menuFontFamily()
   }
 ];
 
@@ -46,12 +49,14 @@ let timed = true;
 let timeEnd = 10;
 let textLength = 20;
 let textLanguage = "english";
+let fontFamily = "Cousine";
 let menuOptions = [];
 let menuSelected = 0;
 let resultOpen = false;
 let fontSize = 24;
 let text = "";
 let cursorCss;
+let rootCss;
 let characterWidth;
 let cursorPosition = { x: 0, y : 0 };
 let visibleLine = 0;
@@ -266,6 +271,26 @@ function menuWordCount() {
   loadMenu({options: countMenu});
 }
 
+function menuFontFamily() {
+  const changeFont = (newFont) => {
+    fontFamily = newFont; 
+    document.documentElement.style.setProperty("--font", newFont);
+    reset();
+    calibrate();
+    renderText(text);
+    openMenu(false);
+    setTimeout(() => loadMenu({options: mainMenu}), 200);
+  }
+
+  const countMenu = [
+    { name: "Cousine", action: () => changeFont("Cousine") },
+    { name: "Roboto Mono", action: () => changeFont("Roboto Mono") },
+    { name: "Source Code Pro", action: () => changeFont("Source Code Pro") }
+  ];
+
+  loadMenu({options: countMenu});
+}
+
 function menuTimer() {
   const changeCount = (action, newTime) => {
     timeEnd = newTime ? newTime : timeEnd; 
@@ -359,6 +384,10 @@ function calibrate() {
     if(cssRule.selectorText && cssRule.selectorText === ".char") {
       cssRule.style.width = `${characterWidth}px`;
       cssRule.style.fontSize = `${fontSize}px`;
+    }
+
+    if(cssRule.selectorText && cssRule.selectorText === ":root") {
+      rootCss = cssRule;
     }
 
     if(cssRule.selectorText && cssRule.selectorText === ".cursor") {
