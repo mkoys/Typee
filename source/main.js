@@ -16,7 +16,7 @@ const resultsPresicionElement = document.querySelector(".resultsPresicion");
 const fontFamily = "Cousine";
 const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
 const funtionKeys = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"];
-const ignoreKeys = ["Escape", "Shift", "Alt", "CapsLock", "Enter", "Controll", "Delete", "Insert", "Home", "End", "PageUp", "PageDown", "ScrollLock", "Pause", ...funtionKeys, ...arrowKeys];
+const ignoreKeys = ["Escape", "Shift", "Alt", "CapsLock", "Enter", "Control", "Delete", "Insert", "Home", "End", "PageUp", "PageDown", "ScrollLock", "Pause", ...funtionKeys, ...arrowKeys];
 const resizeObserver = new ResizeObserver(_entries => updateView({ force: true }));
 const visibleLines = 3;
 
@@ -64,7 +64,8 @@ generateText(textLength);
 renderText(text);
 
 menuSearchElement.addEventListener("keydown", event => {
-  if(ignoreKeys.findIndex(key => key === event.key) > -1) return;
+  const searchIgnoreKeys = [...ignoreKeys, "Tab"];
+  if(searchIgnoreKeys.findIndex(key => key === event.key) > -1) return;
   const filter = event.key === "Backspace" ?  menuSearchElement.value.slice(0, menuSearchElement.value.length - 1) : menuSearchElement.value + event.key;
   loadMenu({filter});
 });
