@@ -1,5 +1,3 @@
-import words from "./words.js"
-
 const mainElement = document.querySelector(".main"); 
 const textElement = document.querySelector(".text");
 const cursorElement = document.querySelector(".cursor");
@@ -22,6 +20,9 @@ const funtionKeys = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10"
 const ignoreKeys = ["Escape", "Shift", "Alt", "CapsLock", "Enter", "Control", "Delete", "Insert", "Home", "End", "PageUp", "PageDown", "ScrollLock", "Pause", ...funtionKeys, ...arrowKeys];
 const resizeObserver = new ResizeObserver(_entries => updateView({ force: true }));
 const visibleLines = 3;
+
+const languageRequest = await fetch("/languages/_list.json");
+const languageList = await languageRequest.json();
 
 const themes = [
   {
@@ -78,6 +79,7 @@ let time = 0;
 let timed = true;
 let timeEnd = 10;
 let textLength = 20;
+let language = null;
 let textLanguage = "english";
 let fontFamily = "Cousine";
 let menuOptions = [];
@@ -104,6 +106,7 @@ let precision = 0;
 let wpm = 0;
 let timerInterval = null;
 
+await loadLanguage(textLanguage);
 calibrate();
 loadMenu({options: mainMenu});
 generateText(textLength);
@@ -165,6 +168,10 @@ document.addEventListener("keydown", event => {
   }
 });
 
+function isOverflown(element) {
+  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
+}
+
 function timeMode() {
   if(timerInterval === null) {
     if(timed) {
@@ -175,6 +182,12 @@ function timeMode() {
       timerElement.style.opacity = null;
     }
   }
+}
+
+async function loadLanguage(name) {
+  const request = await fetch(`/languages/${name}.json`);
+  const newLanguage = await request.json();
+  language = newLanguage;
 }
 
 function checkTimer() {
@@ -249,10 +262,10 @@ function openMenu(action) {
 }
 
 function menuLanguage() {
-  const languages = Object.keys(words);
-  const languageMenu = languages.map(language => { 
-    return { name: language.charAt(0).toUpperCase() + language.slice(1), action: () => { 
+  const languageMenu = languageList.map(language => { 
+    return { name: language.charAt(0).toUpperCase() + language.slice(1), action: async () => { 
       textLanguage = language; 
+      await loadLanguage(textLanguage);
       reset();
       generateText(textLength);
       renderText(text);
@@ -290,7 +303,7 @@ function menuWordCount() {
     textLength = newCount; 
     reset();
     generateText(textLength);
-    renderText(text);
+    renderText(text);ma
     openMenu(false);
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
@@ -470,9 +483,10 @@ function calibrate() {
 
 function generateText(length = 0) {
   text = "";
+  const words = language.words;
   for(let index = 0; index < length; index++) {
-    const randomNumber = Math.floor(Math.random() * words[textLanguage].length);
-    text += index != length - 1 ? `${words[textLanguage][randomNumber]} ` : words[textLanguage][randomNumber];
+    const randomNumber = Math.floor(Math.random() * words.length);
+    text += index != length - 1 ? `${words[randomNumber]} ` : words[randomNumber];
   }
 }
 
