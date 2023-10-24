@@ -121,9 +121,9 @@ document.addEventListener("keydown", event => {
   if(!menuOpen) {
     if(event.key === "Tab") {
       event.preventDefault();
-        reset();
-        generateText(textLength);
-        renderText(text);
+      reset();
+      generateText(textLength);
+      renderText(text);
       if(resultOpen) openResults(false);
     }else if(event.key === "Backspace") {
       cursorBack();
@@ -180,6 +180,9 @@ function checkTimer() {
   if((performance.now() - timer) / 1000 >= timeEnd) {
     timerElement.style.opacity = null;
     openResults(true);
+    reset();
+    generateText(textLength);
+    renderText(text);
     clearInterval(timerInterval);
     timerInterval = null;
   }
@@ -288,7 +291,7 @@ function menuWordCount() {
     textLength = newCount; 
     reset();
     generateText(textLength);
-    renderText(text);ma
+    renderText(text);
     openMenu(false);
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
@@ -307,7 +310,7 @@ function menuWordCount() {
 
 function menuTheme() {
   const changeTheme = (newTheme) => {
-    const theme = loadTheme(newTheme);
+    loadTheme(newTheme);
     openMenu(false);
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
