@@ -4,10 +4,10 @@
 
 :root {
   --font: 'Cousine', monospace;
-  --background-color: #121212;
-  --placeholder-color: yellow;
-  --right-color: white;
-  --wrong-color: red;
+  --bg-color: #121212;
+  --sub-color: yellow;
+  --main-color: white;
+  --error-color: red;
 }
 
 * {
@@ -22,7 +22,7 @@ html, body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--background-color);
+  background-color: var(--bg-color);
 }
 
 .container {
@@ -39,7 +39,7 @@ html, body {
   transition: 0.2s ease opacity;
   opacity: 0;
   width: 100%;
-  color: var(--right-color);
+  color: var(--main-color);
   margin-bottom: 4px;
   font-size: 24px;
 }
@@ -75,7 +75,7 @@ html, body {
   max-width: 600px;
   width: calc(100% - 40px);
   position: absolute;
-  background-color: var(--background-color);
+  background-color: var(--bg-color);
   border-radius: 10px;
 }
 
@@ -93,13 +93,13 @@ html, body {
   background-color: transparent;
   border: none;
   outline: none;
-  color: var(--right-color);
+  color: var(--main-color);
   width: 100%;
 }
 
 .searchIcon {
   margin-right: 10px;
-  fill: var(--placeholder-color);
+  fill: var(--sub-color);
 }
 
 .menuOptions {
@@ -116,16 +116,16 @@ html, body {
 }
 
 .selected {
-  background-color: var(--right-color);
+  background-color: var(--main-color);
 }
 
 .selected > .menuOptionText {
-  color: var(--background-color);
+  color: var(--bg-color);
 }
 
 .menuOptionText {
   transition: 0.1s ease color;
-  color: var(--right-color);
+  color: var(--main-color);
   font-size: 13px;
 }
 
@@ -154,7 +154,7 @@ html, body {
 }
 
 .resultsText {
-  color: var(--placeholder-color);
+  color: var(--sub-color);
   font-size: 20px;
 }
 
@@ -168,21 +168,21 @@ html, body {
 }
 
 .logo:hover > .logoText {
-  color: var(--right-color);
+  color: var(--main-color);
 }
 
 .logo:hover > .logoIcon{
-  fill: var(--right-color);
+  fill: var(--main-color);
   transform: rotate(180deg);
 }
 
 .logoIcon {
-  fill: var(--placeholder-color);
+  fill: var(--sub-color);
   transition: 0.2s ease fill, 0.2s ease transform;
 }
 
 .logoSpan {
-  color: var(--placeholder-color);
+  color: var(--sub-color);
 }
 
 .logoText {
@@ -190,7 +190,7 @@ html, body {
   font-size: 24px;
   font-weight: bold;
   font-style: italic;
-  color: var(--placeholder-color);
+  color: var(--sub-color);
   font-family: var(--font);
   transition: 0.2s ease color;
 }
@@ -217,7 +217,7 @@ html, body {
 .cursorBody {
   width: 100%;
   height: 2px;
-  background-color: var(--placeholder-color);
+  background-color: var(--sub-color);
 }
 
 .text {
@@ -232,13 +232,13 @@ html, body {
 .char {
   font-family: var(--font);
   font-size: 24px;
-  color: var(--placeholder-color);
+  color: var(--sub-color);
 }
 
 .right {
-  color: var(--right-color);
+  color: var(--main-color);
 }
 
 .wrong {
-  color: var(--wrong-color);
+  color: var(--error-color);
 }

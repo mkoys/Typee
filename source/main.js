@@ -23,30 +23,8 @@ const visibleLines = 3;
 
 const languageRequest = await fetch("/languages/_list.json");
 const languageList = await languageRequest.json();
-
-const themes = [
-  {
-    name: "Buldoser",
-    background: "#121212",
-    placeholder: "yellow",
-    right: "white",
-    wrong: "red"
-  },
-  {
-    name: "Terminal",
-    background: "black",
-    placeholder: "lime",
-    right: "white",
-    wrong: "red"
-  },
-  {
-    name: "Rose",
-    background: "#f37f83",
-    placeholder: "#e53c58",
-    right: "white",
-    wrong: "#fcd23f"
-  }
-];
+const themeRequest = await fetch("/themes/_list.json");
+const themeList = await themeRequest.json();
 
 const mainMenu = [
   {
@@ -76,6 +54,7 @@ const mainMenu = [
 ];
 
 let time = 0;
+let theme = null;
 let timed = true;
 let timeEnd = 10;
 let textLength = 20;
@@ -168,10 +147,6 @@ document.addEventListener("keydown", event => {
   }
 });
 
-function isOverflown(element) {
-  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
-}
-
 function timeMode() {
   if(timerInterval === null) {
     if(timed) {
@@ -188,6 +163,16 @@ async function loadLanguage(name) {
   const request = await fetch(`/languages/${name}.json`);
   const newLanguage = await request.json();
   language = newLanguage;
+}
+
+function loadTheme(name) {
+  if(theme) document.head.removeChild(theme);
+  theme = null;
+  const linkElement = document.createElement("link");
+  linkElement.rel = "stylesheet";
+  linkElement.href = `/themes/${name}.css`;
+  theme = linkElement;
+  document.head.appendChild(linkElement);
 }
 
 function checkTimer() {
@@ -322,17 +307,13 @@ function menuWordCount() {
 
 function menuTheme() {
   const changeTheme = (newTheme) => {
-    const theme = themes[themes.findIndex(item => item.name === newTheme)];
-    document.documentElement.style.setProperty("--background-color", theme.background);
-    document.documentElement.style.setProperty("--placeholder-color", theme.placeholder);
-    document.documentElement.style.setProperty("--right-color", theme.right);
-    document.documentElement.style.setProperty("--wrong-color", theme.wrong);
+    const theme = loadTheme(newTheme);
     openMenu(false);
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
 
-  const themeMenu = themes.map(theme => { 
-    return { name: theme.name, action: () => changeTheme(theme.name) }
+  const themeMenu = themeList.map(theme => { 
+    return { name: theme.name, action: async () => await changeTheme(theme.name) }
   });
 
   loadMenu({options: themeMenu});
