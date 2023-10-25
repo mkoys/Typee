@@ -270,3 +270,31 @@ html, body {
 .wrong {
   color: var(--error-color);
 }
+
+.footer {
+  transition: 0.2s ease opacity;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tips {
+  margin: 20px;
+  display: grid;
+  grid-template-columns: auto;
+  row-gap: 10px;
+}
+
+.tipText {
+  color: var(--sub-color);
+  font-size: 11px;
+}
+
+.tipKey {
+  font-weight: bold;
+  padding: 3px;
+  background-color: var(--sub-color);
+  color: var(--bg-color);
+  border-radius: 3px;
+}
+

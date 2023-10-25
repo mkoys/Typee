@@ -14,6 +14,7 @@ const resultsCpmElement = document.querySelector(".resultsCPM");
 const resultsPresicionElement = document.querySelector(".resultsPresicion");
 const resultsRealPresicionElement = document.querySelector(".resultsRealPresicion");
 const timerElement = document.querySelector(".timer");
+const footerElement = document.querySelector(".footer");
 
 const arrowKeys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
 const funtionKeys = ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"];
@@ -121,6 +122,7 @@ document.addEventListener("keydown", event => {
   if(ignoreKeys.findIndex(key => key === event.key) > -1) return;
 
   if(!resultOpen && !menuOpen) {
+    footerElement.style.opacity = 0;
     if(!timer) timer = performance.now();
     timeMode();
   }
@@ -132,6 +134,7 @@ document.addEventListener("keydown", event => {
       generateText(textLength);
       renderText(text);
       if(resultOpen) openResults(false);
+      footerElement.style.opacity = null;
     }else if(event.key === "Backspace") {
       cursorBack();
       const currentCharacter = textElement.children[wordPosition].children[characterPosition];
