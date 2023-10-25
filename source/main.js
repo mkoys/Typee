@@ -29,32 +29,39 @@ const themeList = await themeRequest.json();
 const mainMenu = [
   {
     name: "Language...",
+    icon: "language",
     action: () => menuLanguage()
   },
   {
     name: "Timer...",
+    icon: "timer",
     action: () => menuTimer()
   },
   {
     name: "Theme...",
+    icon: "palette",
     action: () => menuTheme()
   },
   {
     name: "Font Size...",
+    icon: "format_size",
     action: () => menuFontSize()
   },
   {
     name: "Word Count...",
+    icon: "text_increase",
     action: () => menuWordCount()
   },
   {
     name: "Font Family...",
+    icon: "title",
     action: () => menuFontFamily()
   }
 ];
 
 let time = 0;
 let theme = null;
+let themeName = null;
 let timed = true;
 let timeEnd = 10;
 let textLength = 20;
@@ -168,10 +175,12 @@ async function loadLanguage(name) {
 function loadTheme(name) {
   if(theme) document.head.removeChild(theme);
   theme = null;
+  themeName = null;
   const linkElement = document.createElement("link");
   linkElement.rel = "stylesheet";
   linkElement.href = `/themes/${name}.css`;
   theme = linkElement;
+  themeName = name;
   document.head.appendChild(linkElement);
 }
 
@@ -250,6 +259,9 @@ function openMenu(action) {
 }
 
 function menuLanguage() {
+  const currenlySelected = language;
+  const mapIndex = languageList.findIndex(item => item === currenlySelected.name);
+
   const languageMenu = languageList.map(language => { 
     return { name: language.charAt(0).toUpperCase() + language.slice(1), action: async () => { 
       textLanguage = language; 
@@ -262,6 +274,7 @@ function menuLanguage() {
     }}
   });
 
+  if(mapIndex > -1) languageMenu[mapIndex].afterIcon = "check";
   loadMenu({options: languageMenu});
 }
 
@@ -275,6 +288,10 @@ function menuFontSize() {
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
 
+  const currenlySelected = fontSize;
+  const map = [12, 14, 16, 20, 24];
+  const mapIndex = map.findIndex(item => item == currenlySelected);
+
   const fontMenu = [
     { name: "12px", action: () => changeFont(12) },
     { name: "14px", action: () => changeFont(14) },
@@ -283,6 +300,7 @@ function menuFontSize() {
     { name: "24px", action: () => changeFont(24) }
   ];
 
+  if(mapIndex > -1) fontMenu[mapIndex].afterIcon = "check";
   loadMenu({options: fontMenu});
 }
 
@@ -296,6 +314,10 @@ function menuWordCount() {
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
 
+  let currenlySelected = textLength;
+  const map = [3, 5, 10, 20, 50];
+  const mapIndex = map.findIndex(item => item == currenlySelected);
+
   const countMenu = [
     { name: "3 words", action: () => changeCount(3) },
     { name: "5 words", action: () => changeCount(5) },
@@ -304,6 +326,7 @@ function menuWordCount() {
     { name: "50 words", action: () => changeCount(50) }
   ];
 
+  if(mapIndex > -1) countMenu[mapIndex].afterIcon = "check";
   loadMenu({options: countMenu});
 }
 
@@ -315,10 +338,14 @@ function menuTheme() {
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
 
+  const currenlySelected = themeName;
+  const mapIndex = themeList.findIndex(item => item.name === currenlySelected);
+
   const themeMenu = themeList.map(theme => { 
     return { name: theme.name, action: async () => await changeTheme(theme.name) }
   });
 
+  if(mapIndex > -1) themeMenu[mapIndex].afterIcon = "check";
   loadMenu({options: themeMenu});
 }
 
@@ -333,12 +360,17 @@ function menuFontFamily() {
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
 
+  const currenlySelected = fontFamily;
+  const map = ["Cousine", "Roboto Mono", "Source Code Pro"];
+  const mapIndex = map.findIndex(item => item === currenlySelected);
+
   const countMenu = [
     { name: "Cousine", action: () => changeFont("Cousine") },
     { name: "Roboto Mono", action: () => changeFont("Roboto Mono") },
     { name: "Source Code Pro", action: () => changeFont("Source Code Pro") }
   ];
 
+  if(mapIndex > -1) countMenu[mapIndex].afterIcon = "check";
   loadMenu({options: countMenu});
 }
 
@@ -353,6 +385,10 @@ function menuTimer() {
     setTimeout(() => loadMenu({options: mainMenu}), 200);
   }
 
+  let currenlySelected = timeEnd;
+  const map = [5, 10, 15, 30, 60, false];
+  const mapIndex = map.findIndex(item => item == currenlySelected);
+
   const countMenu = [
     { name: "5 sconds", action: () => changeCount(true, 5) },
     { name: "10 sconds", action: () => changeCount(true, 10) },
@@ -362,6 +398,7 @@ function menuTimer() {
     { name: "Off", action: () => changeCount(false) }
   ];
 
+  if(mapIndex > -1) countMenu[mapIndex].afterIcon = "check";
   loadMenu({options: countMenu});
 }
 
@@ -394,12 +431,29 @@ function loadMenu({ options, filter }) {
     if(option.name.toLowerCase().startsWith(filter.toLowerCase())) {
       const menuOptionElement = document.createElement("div");
       const menuOptionTextElement = document.createElement("p");
+      const menuOptionHeader = document.createElement("div");
       if(optionIndex == menuSelected) menuOptionElement.classList.add("selected");
+      if(option.icon) {
+        const iconElement = document.createElement("span");
+        iconElement.classList.add("material-symbols-rounded");
+        iconElement.classList.add("menuOptionIcon");
+        iconElement.textContent = option.icon;
+        menuOptionHeader.appendChild(iconElement);
+      }
       menuOptionElement.classList.add("menuOption");
       menuOptionTextElement.classList.add("menuOptionText");
+      menuOptionHeader.classList.add("menuOptionHeader");
       menuOptionTextElement.textContent = option.name;
-      menuOptionElement.appendChild(menuOptionTextElement);
+      menuOptionHeader.appendChild(menuOptionTextElement);
+      menuOptionElement.appendChild(menuOptionHeader);
       menuOptionsElement.appendChild(menuOptionElement);
+      if(option.afterIcon) {
+        const iconElement = document.createElement("span");
+        iconElement.classList.add("material-symbols-rounded");
+        iconElement.classList.add("menuOptionAfterIcon");
+        iconElement.textContent = option.afterIcon;
+        menuOptionElement.appendChild(iconElement);
+      }
       menuOptionElement.addEventListener("click", _event => option.action());
       menuOptionElement.addEventListener("mouseenter", _event => {
         const children = [...event.srcElement.parentNode.children];
@@ -430,7 +484,7 @@ function reset() {
 function calibrate() {
   characterHeight = 0;
   const canvas = new OffscreenCanvas(100, 100);
-  const cssRules = document.styleSheets[0].cssRules;
+  const cssRules = document.styleSheets[1].cssRules;
   const context = canvas.getContext("2d");
   context.font = `${fontSize}px ${fontFamily}`;
   characterWidth = context.measureText("a").width;

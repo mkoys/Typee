@@ -111,22 +111,50 @@ html, body {
 }
 
 .menuOption {
+  display: flex;
+  justify-content: space-between;
   transition: 0.1s ease background-color;
   padding: 10px 16px;
+  align-items: center;
+}
+
+.menuOptionIcon {
+  font-size: 16px;
+  color: var(--main-color);
+  margin-right: 10px;
+}
+
+.selected > .menuOptionHeader > .menuOptionIcon {
+  color: var(--bg-color);
+}
+
+.menuOptionAfterIcon {
+  font-size: 16px;
+  color: var(--main-color);
+  justify-self: flex-end;
+}
+
+.menuOptionHeader {
+  display: flex;
+  align-items: center;
+}
+
+.selected > .menuOptionAfterIcon {
+  color: var(--bg-color);
 }
 
 .selected {
   background-color: var(--main-color);
 }
 
-.selected > .menuOptionText {
+.selected > .menuOptionHeader > .menuOptionText {
   color: var(--bg-color);
 }
 
 .menuOptionText {
   transition: 0.1s ease color;
   color: var(--main-color);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .disapear {
