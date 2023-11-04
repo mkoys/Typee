@@ -204,7 +204,7 @@ function openResults(action) {
   if(action) {
     precision = right / ((right + wrong) / 100);
     const realPrecision = right / ((right + mistakes) / 100);
-    wpm = Math.floor((typedWords / ((performance.now() - timer) / 1000)) * 60);
+    wpm = Math.floor(((right + wrong) / 5) / ((performance.now() - timer) / 1000 / 60));
     
     resultsRightElement.textContent = `Right: ${right}`;
     resultsWrongElement.textContent = `Wrong: ${wrong}`;
